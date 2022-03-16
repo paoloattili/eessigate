@@ -25,6 +25,8 @@ import { DirectivesModule } from "./common/directives/directives.module";
 import { NotificheComponent } from "./common/components/notifiche/notifiche.component";
 import { WebsocketNotifiche } from "./utils/websocket-notifiche";
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -46,7 +48,13 @@ import { HashLocationStrategy, LocationStrategy } from "@angular/common";
     BrowserAnimationsModule,
     HttpClientModule,
     SharedModule,
-    DirectivesModule
+    DirectivesModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     MenuService,
