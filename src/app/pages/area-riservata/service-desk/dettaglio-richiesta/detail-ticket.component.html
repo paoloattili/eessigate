@@ -1,0 +1,368 @@
+<h1>{{title}}</h1>
+<mat-divider></mat-divider>
+
+<mat-stepper style="max-width: 1400px; margin: auto;" #matStepper [linear]="false" [selectedIndex]="selectedIndex" class="stepper-richiesta-dettaglio" >
+  <ng-template matStepperIcon="edit">
+    <mat-icon>done</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="active">
+    <mat-icon>done</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="done">
+    <mat-icon>done</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="number">
+    <mat-icon >done</mat-icon>
+  </ng-template>
+  <mat-step>
+    <ng-template matStepLabel>
+      Aperto
+    </ng-template>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>
+      Risolto
+    </ng-template>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Chiuso</ng-template>
+  </mat-step>
+</mat-stepper>
+
+<div class="main-container-ticket-ticket wrapper richiesta-dettaglio"
+       fxLayout="row" fxLayout.gt-md="row" fxLayout.lt-md="column"
+       fxLayoutAlign="center start" fxLayoutAlign.gt-md="center start" fxLayoutAlign.lt-md="start center"
+       fxLayoutGap="1rem" fxLayoutGap.lt-lg="1rem">
+
+    <div class="main-container-ticket-ticket richiesta-dettaglio"
+         fxFlex="30"
+         fxLayout="column"
+         fxLayoutGap="1rem"
+    >
+
+
+      <mat-card class="generic-card richiesta-dettaglio history mat-elevation-z8">
+        <mat-card-header class="generic-card-header">
+          <mat-icon mat-card-avatar>info</mat-icon>
+          <mat-card-title>Dettaglio Richiesta</mat-card-title>
+        </mat-card-header>
+
+        <div class="container-content richiesta-dettaglio history ">
+          <mat-card-content class="generic-card-content">
+            <div class="container-info-items richiesta-dettaglio"
+                 fxLayout="column"
+            >
+
+              <!--            &lt;!&ndash; Numero &ndash;&gt;-->
+              <!--            <div class="item">-->
+              <!--              <span class="item-name">Numero:</span>-->
+              <!--              <span class="item-value">{{ richiesta.idTicket }}</span>-->
+              <!--            </div>-->
+
+              <!-- Title -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Titolo:</span>
+                <span class="item-value" fxFlex="50">{{ ticket?.title }}</span>
+              </div>
+
+              <!-- Stato -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Stato:</span>
+                <ng-container [ngSwitch]="stato">
+                  <span *ngSwitchCase="1" class="item-value" fxFlex="50">Aperto</span>
+                  <span *ngSwitchCase="2" class="item-value" fxFlex="50">Risolto</span>
+                  <span *ngSwitchCase="3" class="item-value" fxFlex="50">Chiuso</span>
+                </ng-container>
+              </div>
+
+
+              <!-- Creato -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Creato:</span>
+                <span class="item-value" fxFlex="50">{{ ticket.dataApertura | date: 'dd-MM-yyyy HH:mm' }}</span>
+              </div>
+
+              <mat-divider></mat-divider>
+
+              <!-- Settore -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Settore:</span>
+                <span class="item-value" fxFlex="50">{{ ticket.settore }}</span>
+              </div>
+
+              <!-- Alto -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Impatto:</span>
+                <span class="item-value" fxFlex="50">{{ ticket.impatto }}</span>
+              </div>
+
+              <!-- Urgenza -->
+              <div class="item"
+                   fxLayout="row wrap"
+                   fxLayoutAlign="space-between"
+              >
+                <span class="item-name" fxFlex="50">Urgenza:</span>
+                <span class="item-value" fxFlex="50">{{ ticket.urgenza }}</span>
+              </div>
+
+              <mat-divider></mat-divider>
+
+              <!-- stato ticket -->
+              <ng-container *ngIf="argomentoHelpDesk === 'business'">
+                <button type="button" class="btn-basic" mat-raised-button (click)="openDialog()">
+                  Cambia Stato ticket
+                </button>
+              </ng-container>
+
+            </div>
+
+          </mat-card-content>
+        </div>
+      </mat-card>
+
+
+      <mat-card class="generic-card richiesta-dettaglio history mat-elevation-z8"
+                dndFile (fileDropped)="allegatoSelezionato($event)"
+      >
+        <mat-card-header class="generic-card-header"
+          fxLayout="row"
+        >
+          <mat-icon mat-card-avatar>attach_file</mat-icon>
+          <mat-card-title>Allegati Caricati</mat-card-title>
+
+        </mat-card-header>
+
+        <div class="container-content richiesta-dettaglio ">
+          <mat-card-content class="generic-card-content"
+                            fxLayout="column"
+           fxLayoutAlign="start center">
+
+            <!-- button Aggiungi allegati-->
+            <button mat-raised-button
+                    class="btn-basic"
+                    *ngIf="attachments.length < 3"
+                    [matTooltip]="'I file possono essere trascinati.'">
+              <mat-icon>attach_file</mat-icon>
+              <span fxHide.lt-md>Aggiungi Allegati</span>
+              <input id="uploadAttachment" #fileInput type="file" [multiple]="true"
+                     (change)="$event.stopPropagation();allegatoSelezionato($event.target.files);"
+                     name="uploadAttachment"/>
+            </button>
+
+            <!-- ALLEGATI -->
+            <form style="margin-top:20px; width:100%" [formGroup]="richiestaForm">
+              <div class="container-img" fxFlex fxLayout="column" formArrayName="attachments">
+
+                <div fxFlex class="container-file-input"
+                     *ngFor="let item of attachments.controls; let i=index;"
+                >
+                  <div class="fileForm"
+                       [formGroupName]="i"
+                       fxLayout="row"
+                       fxLayoutAlign="center center"
+                       style="margin-bottom: 15px;"
+                  >
+
+                    <!-- input display name -->
+                    <mat-form-field
+                      fxFlex
+                      class="form-field-file"
+                      appearance="outline"
+                    >
+                      <mat-label>File</mat-label>
+
+                      <input formControlName="name" matInput readonly name="name">
+
+                      <button mat-icon-button matPrefix style="margin-right: 10px;" *ngIf="item.get(['token'])?.value" (click)="scaricaAllegato(item.get(['token'])?.value)" >
+                        <mat-icon>cloud_download</mat-icon>
+                      </button>
+
+                      <button mat-icon-button matSuffix (click)="$event.stopPropagation();rimuoviAllegato(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+
+                      <!-- filename errors -->
+                      <ng-container
+                        *ngIf="item.get(['name'])!.dirty || item.get(['name'])!.touched">
+                        <mat-error *ngIf="item.get(['fileSource'])!.errors?.required">
+                          Si deve scegliere un file!
+                        </mat-error>
+                      </ng-container>
+
+                      <!-- FILE - ERRORS -->
+                      <ng-container *ngIf="item.get(['fileSource'])?.errors">
+                        <ng-container
+                          *ngIf="item.get(['fileSource']).errors['invalidSize'] !== null">
+                          <mat-error *ngIf="item.get(['fileSource']).errors['invalidSize']">
+                            Il file {{item.get(['name']).value}} supera i 20Mbyte. Devi
+                            scegliere un
+                            altro
+                            file.
+                          </mat-error>
+                        </ng-container>
+
+                        <ng-container
+                          *ngIf="item.get(['fileSource']).errors['invalidType'] !== null">
+                          <mat-error *ngIf="item.get(['fileSource']).errors['invalidType']">
+                            Questo tipo di file {{item.get(['name']).value}} non può
+                            essere
+                            caricato.
+                          </mat-error>
+                        </ng-container>
+
+                        <ng-container
+                          *ngIf="item.get(['fileSource']).errors['invalidName'] !== null">
+                          <mat-error *ngIf="item.get(['fileSource']).errors['invalidName']">
+                            Il file {{item.get(['name']).value}} deve essere rinominato.
+                          </mat-error>
+                        </ng-container>
+
+                      </ng-container>
+
+                    </mat-form-field>
+
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+
+
+            <mat-divider></mat-divider>
+
+
+            <div
+              style="width: 100%;"
+              fxLayout="row"
+              fxLayoutAlign="space-evenly center"
+            >
+              <!-- button salva allegati-->
+              <button style="margin-top:20px;" class="btn-success" type="button" mat-raised-button [disabled]="!verificaCambiamenti()" (click)="ripristina()">
+                <mat-icon>refresh</mat-icon>
+                <span fxHide.lt-md> Ripristina</span>
+              </button>
+
+              <!-- button salva allegati-->
+              <button style="margin-top:20px;" class="btn-basic" type="button" mat-raised-button [disabled]="!verificaCambiamenti()" (click)="modificaAllegati()">
+                <mat-icon>save</mat-icon>
+                <span fxHide.lt-md> Salva modifiche</span>
+              </button>
+
+            </div>
+
+          </mat-card-content>
+        </div>
+      </mat-card>
+
+    </div>
+
+    <div class="main-container-ticket richiesta-dettaglio mat-elevation-z8" fxFlex="70">
+
+
+      <mat-card class="generic-card richiesta-dettaglio history mat-elevation-z0">
+        <mat-card-header class="generic-card-header">
+          <mat-icon mat-card-avatar>question_answer</mat-icon>
+          <mat-card-title>Chat Richiesta</mat-card-title>
+        </mat-card-header>
+
+        <div class="container-content richiesta-dettaglio history ">
+          <mat-card-content class="generic-card-content">
+
+            <div class="container-discussione">
+              <app-chat
+                [disabilitaPulsante]="this.argomentoHelpDesk === 'tecnico'? false : true"
+                [menu]="false"
+                [comments]="convertToComments(ticket?.messaggi)"
+                (commentEvent)="inviaComment($event)"
+                ></app-chat>
+            </div>
+
+          </mat-card-content>
+        </div>
+      </mat-card>
+
+    </div>
+  </div>
+
+<!-- cambio di stato dialog -->
+<ng-template #dialog>
+  <mat-progress-bar style="position: absolute; top: 0; left: 0;" mode="indeterminate" *ngIf="spinnerService.isProgressBarActive()">
+  </mat-progress-bar>
+  <div style="position: relative; height: 100%">
+    <h2 mat-dialog-title>Cambia lo stato della richiesta:</h2>
+    <mat-dialog-content style="overflow: unset">
+      <section>
+        <label style="margin-right: 10px">Stato:</label> <br>
+        <mat-radio-group
+          style="margin-left:50px;"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="10px"
+          [(ngModel)]="nuovoStato"
+        >
+          <mat-radio-button [disabled]="this.stato.toString() === '1'" value="1">Aperto</mat-radio-button>
+          <mat-radio-button  *ngIf="path !== 'mie-richieste'" [disabled]="this.stato.toString() === '2' || this.stato.toString() === '3'" value="2">Risolto</mat-radio-button>
+          <mat-radio-button *ngIf="path !== 'gestione-ticket'" [disabled]="this.stato.toString() === '3'" value="3">Chiuso</mat-radio-button>
+        </mat-radio-group>
+      </section>
+      <section
+        *ngIf="nuovoStato === '3'"
+      >
+        <label style="margin-right: 10px">Esito*:</label> <br>
+        <mat-radio-group
+          style="margin-left:50px;"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="10px"
+          [(ngModel)]="esito">
+          <mat-radio-button  value="Positivo">Positivo</mat-radio-button>
+          <mat-radio-button  value="Negativo">Negativo</mat-radio-button>
+        </mat-radio-group>
+      </section>
+    </mat-dialog-content>
+
+    <div
+      *ngIf="nuovoStato !== '3'"
+      style="
+      position: relative;
+      bottom: 0;
+      margin-top: 10px;
+      margin-left: auto;
+      margin-right: auto;left: 0;right: 0;
+      text-align: center;"
+      mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center" >
+      <button class="btn-basic" mat-raised-button [disabled]="nuovoStato !== '1' && nuovoStato !== '2'"  (click)="cambiaStato(esito)">Cambia stato</button>
+    </div>
+
+    <div
+      *ngIf="nuovoStato === '3'"
+      style="
+      position: relative;
+      bottom: 0;
+      margin-top: 10px;
+      margin-left: auto;
+      margin-right: auto;left: 0;right: 0;
+      text-align: center;"
+      mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center" >
+      <button class="btn-basic" mat-raised-button [disabled]="esito !== 'Positivo' && esito !== 'Negativo'" (click)="cambiaStato(esito)">Cambia stato</button>
+    </div>
+
+  </div>
+</ng-template>
+

@@ -1,0 +1,118 @@
+.workspace-container {
+    padding: 0.8rem 0;
+
+    .tree-container{
+      width: 100%;
+        mat-card {
+            padding: 0;
+        }
+    }
+
+    .documents-container {
+      width: 100%;
+        mat-card {
+            padding: 0;
+        }
+    }
+
+    mat-form-field {
+        display: block;
+    }
+
+    mat-divider.workspace-divider {
+        position: relative;
+        margin-bottom: 3px;
+    }
+
+    .content-title {
+        font-size: 22px;
+        font-weight: bold;
+        vertical-align: super;
+    }
+
+    .mat-tab-label, .mat-tab-label-active{
+        min-width: 0 !important;
+        padding: 0 1rem !important;
+        margin: 4px !important;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    mat-card-header {
+        height: 57px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: left;
+        background-color: #0065cb !important;
+        border-radius: 4px 4px 0 0;
+        color: #fff;
+    }
+
+    mat-card-header div.mat-card-header-text mat-card-title {
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    mat-card-header div.mat-card-header-text {
+    ////    //margin: 0 16px 3px 16px;
+      margin: 0 0 0 0 !important;
+    }
+
+    mat-card-header > *{
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      margin: 0 16px 0 16px !important;
+    }
+
+    mat-card-header mat-card-title{
+      margin: 0 0 0 0 !important;
+    }
+
+    mat-card-header mat-icon.mat-card-avatar{
+      width: auto !important;
+    }
+
+    .workspace-table-container{
+        padding: 1rem;
+    }
+
+    mat-tab-header {
+        border-radius: 4px 4px 0 0 !important;
+        background-color: #0065cb !important;
+        mat-icon {
+          margin-right: 3px;
+        }
+    }
+
+    mat-tab-body {
+        border-radius: 0 0 4px 4px !important;
+    }
+
+    .mat-tab-label {
+        min-width: 0 !important;
+        padding: 0 1rem !important;
+        margin: 4px !important;
+        color: white !important;
+
+        &.mat-tab-label-active {
+          opacity: 1 !important;
+        }
+    }
+
+
+    .table {
+        overflow: hidden;
+        overflow-x: auto;
+    }
+
+    .folder-name {
+        float: right;
+        font-size: 18px;
+        margin-top: 8px
+    }
+
+    button.mat-raised-button {
+        padding-right: 8px;
+    }
+}

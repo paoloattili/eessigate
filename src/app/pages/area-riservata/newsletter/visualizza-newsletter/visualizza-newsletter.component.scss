@@ -1,0 +1,88 @@
+/**
+generic card
+ */
+mat-card.generic-card {
+  padding: 0 0 0 0 !important;
+
+  mat-card-header.generic-card-header {
+    height: 57px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: #0065cb;
+    border-radius: 4px 4px 0 0;
+    color: #fff;
+  }
+
+  mat-card-header.generic-card-header > *{
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: left;
+    margin: 0 16px 0 16px !important;
+  }
+
+  mat-card-header.generic-card-header > mat-icon {
+    width: auto !important;
+  }
+
+  mat-card-header.generic-card-header mat-card-title{
+    margin: 0 -16px !important;
+    font-size: 17px !important;
+    font-weight: bold !important;
+  }
+
+  .container-content-newsletter {
+    // width: 90% !important;
+    // margin: 10px auto 0 auto;
+    // padding-bottom: 10px;
+
+    mat-selection-list {
+      padding-top: 0;
+      max-height: 35rem;
+      overflow-y: auto;
+    }
+
+    mat-list-option {
+      display: initial;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 23rem;
+      height: 5rem;
+
+      .mat-list-item-content.mat-list-item-content-reverse {
+        border-top: 1px solid #00000027;
+      }
+
+      .mat-list-item-content.mat-list-item-content-reverse:hover {
+        background-color: #00000027;
+      }
+    }
+
+    mat-list-option[aria-selected="true"] {
+
+      .mat-list-item-content.mat-list-item-content-reverse {
+        background-color: #00000027;
+      }
+      
+    }
+
+    mat-card-content.genic-card-content {
+      margin-bottom: 0 !important;
+    }
+
+    mat-card-actions.genic-card-content {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .template {
+    max-height: 35rem;
+    overflow-y: auto;
+  }
+}
+
+.page-container {
+  margin-top: 20px;
+}

@@ -1,0 +1,25 @@
+<mat-drawer-container class="app-sidebar-container" [ngClass]="{ 'backdrop': serviceSpinner.isSpinnerActive() }">
+
+  <mat-drawer #drawer
+              [mode]="'over'"
+              [opened]="false"
+              class="app-sidebar mat-elevation-z10">
+    <!-- SIDEBAR -->
+    <app-sidebar [user]="this.service.getUserLogged()" [items]="this.menuService.loadMenu()"></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content class="app-sidebar-content">
+    <!-- TOOLBAR -->
+    <app-toolbar [user]="this.service.getUserLogged()" [items]="this.menuService.loadMenu()" (toggleSideNav)="drawer.toggle()"></app-toolbar>
+    <div class="wrapper">
+      <!-- BREADCRUMBS -->
+      <app-breadcrumbs></app-breadcrumbs>
+      <!-- ROUTEROULET -->
+      <router-outlet></router-outlet>
+    </div>
+    <!-- FOOTER -->
+    <app-footer></app-footer>
+  </mat-drawer-content>
+
+</mat-drawer-container>
+<app-spinner *ngIf="serviceSpinner.isSpinnerActive()"></app-spinner>

@@ -1,0 +1,76 @@
+.search-area, .documents-area {
+    display: inline-block;
+}
+
+.search-area {
+    width: 30%;
+}
+
+.documents-area {
+    width: 70%;
+}
+
+mat-card.search-card, mat-card.documents-card {
+    padding: 0;
+    width: 95%;
+    margin: auto;
+}
+
+.search-tab-content, .documents-tab-content {
+    padding: 16px;
+}
+
+::ng-deep .search-card mat-tab-header {
+    background: #007db3;
+}
+
+::ng-deep .documents-card mat-tab-header {
+    background: #007db3;
+}
+
+::ng-deep .mat-tab-header-pagination-chevron {
+    border-color: #fff;
+}
+
+::ng-deep .mat-tab-label-content {
+    color: #fff;
+}
+
+.btn-primary {
+    padding: .2rem 2rem;
+}
+
+.action-btn-container {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+}
+
+.documents-table th {
+    background: var(--primary);
+    color: #fff;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #fff;
+}
+
+.rapid-filter-area, .selected-folder {
+    display: inline-block;
+    width: 50%;
+    font-weight: bold;
+}
+
+::ng-deep .documents-card mat-tab-group .mat-tab-label.mat-tab-disabled {
+    width: -webkit-fill-available;
+    justify-content: flex-end;
+    opacity: 1;
+}
+
+.upload-doc-btn {
+    background: #f4f4f4;
+    color: #101010;
+    font-weight: bold;
+}

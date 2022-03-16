@@ -1,0 +1,111 @@
+<div class="dialog-container" [ngClass]="{'backdrop-progress-bar' : spinnerService.isProgressBarActive()}">
+    <h2 class="header-dialog">{{ data.titolo }}</h2>
+    <span class="subtitle-dialog">{{ data?.sottotitolo }}</span>
+    <mat-divider></mat-divider>
+    <mat-dialog-content fxLayout="column">
+        <div class="sommario" fxLayout="column" fxFlex="100%">
+            <p class="sommario">
+                {{ data.sommario }}
+            </p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="content-dialog" fxLayout="column" fxFlex="100%">
+            <div class="body-dialog">
+                <div class="body-icon">
+                    <mat-icon class="icon-social-label">newspaper</mat-icon>
+                    <strong>News</strong>
+                </div>
+                <pre class="body-content">
+                <img zoomImg
+                    (ingrandito)="clickImg($event)"
+                    *ngIf="data.image" 
+                    alt="preview-img" 
+                    [cssInput]="{'position':'absolute','top': 'auto','left': 'auto','transform': 'scale(10) translate(60%, 40%)','transition': 'transform 1s','z_index': '10000000','border': '1px solid rgb(143, 143, 143)','background_color': '#fff'}" 
+                    [matTooltip]="ingrandito? 'Clicca fuori dall\'immagine per rimpicciolire' : 'Clicca qui per ingrandire'" 
+                    [src]="'data:image/png;base64,'+data.image" 
+                    class="img-news">
+                <span [innerHTML]='data.body'></span>
+            </pre>
+            </div>
+            <div class="footer-content-dialog" fxLayout="column">
+                <div class="container-footer" fxLayout.gt-sm="row" fxLayout="column">
+                    <div class="author" fxLayoutAlign="start end" fxFlex.gt-sm="50" fxFlex="100">
+                        <span class="author-name">{{ data.nominativo }}</span>
+                    </div>
+                    <div class="publication-date" fxLayoutAlign.gt-sm="end end" fxLayoutAlign="start-end" fxFlex.gt-sm="50" fxFlex="100">
+                        <span class="publication-date-label">{{ data.dataModifica | date: 'dd-MM-yyyy HH:mm' }}</span>
+                    </div>
+                </div>
+            </div>
+            <mat-divider *ngIf="data.stato === 3"></mat-divider>
+            <div class="social-dialog" *ngIf="data.stato === 3" fxLayoutGap="1rem" fxLayout="column" fxFlex>
+                <div class="social-icon">
+                    <mat-icon class="icon-social-label">public</mat-icon>
+                    <strong>Social</strong>
+                </div>
+                <div class="container-url input-url">
+                    <mat-form-field appearance="outline">
+                        <mat-label>URL Contenuto</mat-label>
+                        <input matInput type="search" [value]="url" disabled>
+                        <button mat-button matSuffix [cdkCopyToClipboard]="url" matTooltip="Copy to clipboard"
+                            (click)="openSnackBar()" aria-label="search">
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-divider *ngIf="data.attachments || data.gallery"></mat-divider>
+            <div class="attachments-dialog" *ngIf="data.attachments" fxLayout="column">
+                <div class="allegati-label">
+                    <mat-icon class="icon-attachment-label">attach_file</mat-icon>
+                    <strong>Allegati:</strong>
+                </div>
+                <div class="box-attachments-dialog" fxLayoutGap="1rem" fxLayout.gt-sm="row" fxLayout.lt-md="column">
+                    <div class="box-attachment mat-elevation-z8" *ngFor="let a of data.attachments; let i = index">
+                        <ng-container *ngIf="caricaProgressBar[i]">
+                            <mat-progress-bar mode="indeterminate" *ngIf="spinnerService.isProgressBarActive()">
+                            </mat-progress-bar>
+                        </ng-container>
+                        <div class="attachment-icon">
+                            <mat-icon class="icon-display">file_present</mat-icon>
+                        </div>
+                        <div class="text-ellipsis">
+                            <span [matTooltip]="a.fileName" matTooltipPosition="above">{{ a.fileName }}</span>
+                        </div>
+                        <div class="download-attachment">
+                            <button mat-button class="basic-button-primary" (click)="downloadAttachment(a.token, i)">
+                                <mat-icon>cloud_download</mat-icon>&nbsp;
+                                <span>Download</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <mat-divider *ngIf="data.gallery"></mat-divider>
+            <div class="gallery-dialog" *ngIf="data.gallery" fxLayout="column">
+                <div class="gallery-label">
+                    <mat-icon class="icon-gallery-label">collections</mat-icon>
+                    <strong>Galleria:</strong>
+                </div>
+                <div class="box-gallery-dialog" fxLayoutGap="1rem" fxLayout.gt-sm="row" fxLayout.lt-md="column">
+                    <div class="box-gallery" *ngFor="let img of data.gallery; let i = index">
+                        <img 
+                        zoomImg
+                        width="100%" 
+                        height="100%" 
+                        (ingrandito)="clickImg($event)"
+                        [cssInput]="{'position':'absolute','top': 'auto','left': 'auto','transform': 'scale(2.5) translate(40%, -40%)','transition': 'transform 1s','z_index': '10000000','border': '2px solid rgb(143, 143, 143)','background_color': '#fff'}" 
+                        [matTooltip]="ingrandito? 'Clicca fuori dall\'immagine per rimpicciolire' : 'Clicca qui per ingrandire'" 
+                        [alt]="'gallery-img-'+i"
+                        [src]="'data:image/png;base64,'+img.fileBlob" 
+                        [matTooltip]="img.fileName">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button mat-dialog-close>Chiudi</button>
+    </mat-dialog-actions>
+</div>

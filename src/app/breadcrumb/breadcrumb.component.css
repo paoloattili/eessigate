@@ -1,0 +1,11 @@
+.breadcrumb-container {
+    color: #5a6672;
+    padding-top: 1rem;
+}
+
+mat-icon.home {
+    vertical-align: middle;
+    font-size: 1.15rem;
+    text-align: center;
+    width: 1.2rem;
+}

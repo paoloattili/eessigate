@@ -1,0 +1,84 @@
+mat-expansion-panel-header.expansion-panel-header.gestione-ticket {
+  &.aperti {
+    border-top: thick solid #ce2b37;
+  }
+
+  &.chiusi {
+    border-top: thick solid #007db3;
+  }
+
+  &.risolti {
+    border-top: thick solid #28a645;
+  }
+
+}
+
+.batch-message-container {
+  width: 95%;
+}
+
+.batch-message {
+  text-align: right;
+}
+
+.aperto {
+  border-left-color: #ce2b37;
+  border-left-style: solid;
+}
+
+.chiuso {
+  border-left-color: #007db3;
+  border-left-style: solid;
+}
+
+.risolto {
+  border-left-color: #28a645;
+  border-left-style: solid;
+}
+
+.ticket-card {
+  min-width: 200px;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.ticket-card:hover {
+  opacity: 0.7;
+  cursor: pointer;
+
+  &.aperto {
+    background-color: #ce2b37;
+  }
+
+  &.chiuso {
+    background-color: #007db3;
+  }
+
+  &.risolto {
+    background-color: #28a645;
+  }
+}
+
+.mat-tab-group-ticket.gestione-ticket {
+  width: 100%;
+  .mat-tab-body-wrapper {
+    min-height: 500px !important;
+  }
+}
+
+.container-accordion.gestione-ticket {
+  mat-expansion-panel{
+      width: 90%;
+      margin: 10px auto !important;
+      border-radius: 4px !important;
+    mat-expansion-panel-header{
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+}
+
+.main-container.gestione-ticket {
+  max-width: 1400px;
+  margin: 20px auto;
+}

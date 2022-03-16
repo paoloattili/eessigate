@@ -1,0 +1,35 @@
+.dual-listbox-container {
+    margin: 0  0 1.5rem 0;
+
+    .title-dual-list-box {
+        margin-bottom: 0;
+    }
+
+    .button-primary.btn-dual-list-box {
+        margin-bottom: 0.5rem; 
+        width: 100%;
+    }
+
+    mat-form-field.box-field-dual-list-box {
+        margin-bottom: 0.5rem; 
+        width: 100%;
+    }
+
+    .box-dual-listbox {
+        padding: 10px;
+    }
+
+    div.list-elements {
+        height: 13rem; 
+        overflow-y: auto;
+    }
+
+    .p-options {
+        cursor: pointer;
+        padding: .3rem;
+    }
+
+    .p-options:focus,.p-options:hover,.p-options:active {
+        background-color: rgb(223, 223, 223);
+    }
+}

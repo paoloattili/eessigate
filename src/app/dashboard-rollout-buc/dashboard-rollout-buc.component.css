@@ -1,0 +1,36 @@
+div.description {
+    margin-bottom: 2rem;
+    font-size: .9rem;
+    color: #444;
+}
+
+.rapid-filter-area {
+    display: inline-block;
+    width: 50%;
+    max-width: 22rem;
+    font-weight: bold;
+}
+
+.table-header-title, .table-header-subtitle {
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+
+table {
+    width: 100%;
+}
+
+.ticket-table th {
+    background: var(--primary);
+    color: #fff;
+}
+
+::ng-deep .mat-sort-header-arrow {
+    color: #fff;
+}
+
+::ng-deep th.data-pianificazione button.mat-sort-header-button {
+    flex-flow: column;
+    line-height: 1rem;
+}

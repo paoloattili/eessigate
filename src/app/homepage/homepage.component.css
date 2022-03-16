@@ -1,0 +1,134 @@
+.news-area, .documents-area {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.news-area {
+    width: 60%;
+}
+
+.documents-area {
+    width: 40%;
+}
+
+mat-card.documents-card {
+    padding: 0;
+    width: 95%;
+    margin: auto;
+}
+
+.documents-tab-content {
+    padding: 16px;
+}
+
+.document-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.document-main-info {
+    color: #007db3;
+    display: inline-block;
+}
+
+.document-main-info .document-icon, .document-main-info .document-category {
+    display: inline-block;
+}
+
+.document-icon {
+    vertical-align: middle;
+    padding-right: .2rem;
+}
+
+.document-category {
+    font-weight: 600;
+    display: inline-block;
+    font-size: .9rem;
+}
+
+.upload-date {
+    color: #1c2024;
+    font-weight: 200;
+    font-size: .8rem;
+    display: inline-block;
+    text-align: right;
+}
+
+.document-title {
+    color: #333;
+    font-weight: bold;
+}
+
+.upload-author {
+    color: #1c2024;
+    text-align: right;
+    font-size: .8rem;
+}
+
+::ng-deep .documents-card mat-tab-header {
+    background: #007db3;
+}
+
+::ng-deep .mat-tab-header-pagination-chevron {
+    border-color: #fff;
+}
+
+::ng-deep .mat-tab-label-content {
+    color: #fff;
+}
+
+mat-card.document {
+    border-left: solid 4px #007db3;
+}
+
+.download-btn-label {
+    vertical-align: top;
+    line-height: 24px;
+    display: inline-block;
+}
+
+.news-category-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: .5rem;
+}
+
+.news-item-upload-info {
+    font-size: .8rem;
+    color: #1c2024;
+    /* border-top: solid 1px #000;
+    border-bottom: solid 1px #000; */
+}
+
+.news-item {
+    width: calc(32% - 2rem - 2px);
+    margin-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+    padding: .5rem 1rem;
+}
+
+.news-item-action {
+    text-align: right;
+    padding: 0 1rem;
+}
+
+.news-item-title {
+    font-weight: 600;
+    color: #007db3;
+    cursor: pointer;
+}
+
+.news-item-content {
+    font-size: .9rem;
+    color: #1c2024;
+    cursor: pointer;
+}
+
+mat-card.border-green {
+    border-left: solid 4px #28a745;
+}
+
+mat-card.border-orange {
+    border-left: solid 4px #e9910c;
+}

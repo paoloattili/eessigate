@@ -1,0 +1,28 @@
+.flag-stripes {
+    height: 100%;
+    display: inline-block;
+}
+
+.flag-stripes.red, .flag-stripes.green {
+    width: 33%;
+}
+
+.flag-stripes.green {
+    background: #28a745;
+}
+
+.flag-stripes.white {
+    width: 34%;
+    background: #fff;
+}
+
+.flag-stripes.red {
+    background: #dc3545;
+}
+
+.italian-flag-container {
+    width: 100%;
+    height: .6rem;
+    display: flex;
+    box-shadow: 0 0 6px 2px #888;
+}

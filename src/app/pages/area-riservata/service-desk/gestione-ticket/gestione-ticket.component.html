@@ -1,0 +1,153 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="main-container gestione-ticket"
+     fxLayout="row" fxLayout.gt-md="row" fxLayout.lt-md="column"
+     fxLayoutAlign="center start" fxLayoutAlign.gt-md="center start" fxLayoutAlign.lt-md="start center"
+     fxLayoutGap="1rem" fxLayoutGap.lt-lg="1rem">
+
+  <mat-tab-group mat-stretch-tabs [selectedIndex]="indexTab" (selectedTabChange)="selectedTab($event)"
+                 class="mat-tab-group-ticket gestione-ticket">
+    <!-- tabs -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>build</mat-icon>
+        Tecnico
+      </ng-template>
+      <div class="batch-message-container" fxLayout="column">
+        <!-- passaggio batch -->
+        <ng-container *ngIf="dataUltimoPassaggioBatch; else dataNonSettata">
+          <div class="batch-message"><h3 >Stato dei ticket aggiornato in data {{ dataUltimoPassaggioBatch | date:'dd-MM-yyyy HH:mm' }}</h3></div>
+        </ng-container>
+        <ng-template #dataNonSettata>
+          <div class="batch-message"><h3 >Ultima data del passaggio del batch non recuperata.</h3></div>
+        </ng-template>
+      </div>
+      <ng-container *ngTemplateOutlet="accordionTicket; context: { tipoTicket: 'TECNICO' }"></ng-container>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>business_center</mat-icon>
+        Business
+      </ng-template>
+      <ng-container *ngTemplateOutlet="accordionTicket; context: { tipoTicket: 'BUSINESS' }"></ng-container>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+
+<!-- cards -->
+<ng-template #accordionTicket let-tipoTicket="tipoTicket">
+  <mat-accordion
+    class="container-accordion gestione-ticket"
+    fxLayout="column"
+    fxLayoutAlign="start center"
+    fxFlex="100"
+  >
+
+    <!-- Ticket aperti -->
+    <mat-expansion-panel class="mat-elevation-z8" [expanded]="expandedAperti">
+      <mat-expansion-panel-header class="expansion-panel-header gestione-ticket aperti">
+        <mat-panel-title>
+          Ticket aperti
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-panel-description
+        style="margin-right: 0;"
+      >
+        <div
+          fxFlex="100"
+          fxLayout="row wrap"
+          fxLayoutAlign="start"
+        >
+          <ng-container *ngIf="listTicketAperti?.length > 0; else noTicket">
+            <div
+              fxFlex="33.3%" fxFlex.lt-lg="45" fxFlex.lt-md="100"
+              *ngFor="let ticket of listTicketAperti">
+              <div style="margin:auto;width:calc(100% - 20px)">
+                <ng-container *ngTemplateOutlet="ticketCard; context: { ticket: ticket, tipoTicket: tipoTicket }"></ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </mat-panel-description>
+    </mat-expansion-panel>
+
+    <!-- Ticket risolti -->
+    <mat-expansion-panel class="mat-elevation-z8" [expanded]="expandedRisolti">
+      <mat-expansion-panel-header class="expansion-panel-header gestione-ticket risolti">
+        <mat-panel-title>
+          Ticket Risolti
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-panel-description
+        style="margin-right: 0;"
+      >
+        <div
+          fxFlex="100"
+          fxLayout="row wrap"
+          fxLayoutAlign="start"
+        >
+          <ng-container *ngIf="listTicketRisolti?.length > 0; else noTicket">
+            <div
+              fxFlex="33.3%" fxFlex.lt-lg="45" fxFlex.lt-md="100"
+              *ngFor="let ticket of listTicketRisolti">
+              <div style="margin:auto;width:calc(100% - 20px)">
+                <ng-container *ngTemplateOutlet="ticketCard; context: { ticket: ticket, tipoTicket: tipoTicket }"></ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+
+      </mat-panel-description>
+    </mat-expansion-panel>
+
+    <!-- Ticket chiusi -->
+    <mat-expansion-panel class="mat-elevation-z8" [expanded]="expandedChiusi">
+      <mat-expansion-panel-header class="expansion-panel-header gestione-ticket chiusi">
+        <mat-panel-title>
+          Ticket Chiusi
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-panel-description
+        style="margin-right: 0;"
+      >
+        <div
+          fxFlex="100"
+          fxLayout="row wrap"
+          fxLayoutAlign="start"
+        >
+          <ng-container *ngIf="listTicketChiusi?.length > 0; else noTicket">
+            <div
+              fxFlex="33.3%" fxFlex.lt-lg="45" fxFlex.lt-md="100"
+              *ngFor="let ticket of listTicketChiusi">
+              <div style="margin:auto;width:calc(100% - 20px)">
+                <ng-container *ngTemplateOutlet="ticketCard; context: { ticket: ticket, tipoTicket: tipoTicket }"></ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </mat-panel-description>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>
+
+
+<!-- singola ticket card -->
+<ng-template #ticketCard let-ticket="ticket" let-tipoTicket="tipoTicket" >
+  <mat-card class="ticket-card"
+            (click)="goToDettaglioTicket(ticket,tipoTicket)"
+            [ngClass]="{'aperto': ticket?.idStato === 1,'risolto': ticket?.idStato === 2,'chiuso': ticket?.idStato === 3}">
+    <mat-card-title class="ticket-card title">{{ ticket?.title }}</mat-card-title>
+    <mat-card-content class="ticket-card content">
+      <span>Data apertura: {{ ticket?.dataApertura ? ticket.dataApertura : '-'}}</span> <br>
+      <span>Data chiusura: {{ ticket?.dataChiusura ? ticket.dataChiusura : '-'}}</span> <br>
+      <span>Data risoluzione: {{ ticket?.dataRisoluzione ? ticket.dataRisoluzione : '-'}}</span> <br>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+
+<ng-template #noTicket>
+  Non ci sono ticket.
+</ng-template>

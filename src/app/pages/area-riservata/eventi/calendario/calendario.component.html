@@ -1,0 +1,46 @@
+<h1>{{title}}</h1>
+<mat-divider></mat-divider>
+
+<div class="page-container" fxLayout="row" fxLayoutGap="10px">
+
+  <div class="container-tipo-eventi mat-elevation-z8" fxFlex="20" style="height: 100%;">
+
+
+    <mat-card class="generic-card  mat-elevation-z0">
+      <mat-card-header class="generic-card-header">
+        <mat-icon mat-card-avatar>list</mat-icon>
+        <mat-card-title
+            fxLayout="row"
+            fxLayoutAlign="space-between"
+        >
+          <span>Tipi di evento</span>
+        </mat-card-title>
+
+      </mat-card-header>
+
+      <div class="container-content">
+        <mat-card-content class="generic-card-content">
+
+          <div class="checkbox" fxLayout="column">
+            <mat-checkbox aria-labelledby="richiedi-pubblicazione-label" [formControl]="tuttiGliEventi">Seleziona tutti gli eventi</mat-checkbox>
+          </div>
+
+          <mat-selection-list class="lista-eventi" role="listbox" [multiple]="true" [formControl]="multiSelectControl">
+            <mat-list-option role="option" *ngFor="let tipoEvento of listTipiEventi" [value]="tipoEvento.token" [ngStyle]="{'background-color': tipoEvento.color}">
+              {{tipoEvento.name}}
+            </mat-list-option>
+          </mat-selection-list>
+
+        </mat-card-content>
+      </div>
+    </mat-card>
+
+
+
+  </div>
+
+  <div class="container-calendario  mat-elevation-z8" fxFlex="80" style="height: 100%;">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+</div>

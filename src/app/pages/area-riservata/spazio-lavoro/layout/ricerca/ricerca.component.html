@@ -1,0 +1,75 @@
+<form id="search-form" [formGroup]="searchForm">
+
+  <!-- AUTORE -->
+  <mat-form-field>
+    <mat-label>Autore</mat-label>
+    <input formControlName="autore" [matAutocomplete]="autoAutore" matInput>
+    <mat-autocomplete autoActiveFirstOption #autoAutore="matAutocomplete">
+      <mat-option *ngFor="let option of listaAutori" [value]="option.autore">
+        {{option.autore}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <!-- ORGANIZZAZIONE -->
+  <mat-form-field>
+    <mat-label>Organizzazione</mat-label>
+    <mat-select formControlName="organizzazione">
+      <mat-option value="0"></mat-option>
+      <mat-option *ngFor="let option of listaOrganizzazione" [value]="option.token">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- TIPO DOCUMENTO -->
+
+  <mat-form-field>
+    <mat-label>Tipo documento*</mat-label>
+    <mat-select formControlName="tipoDocumento">
+      <mat-option value="0"></mat-option>
+      <mat-option *ngFor="let option of tipiDocumentoTipologiche" [value]="option.token">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- STATO DOCUMENTO -->
+  <div class="radio-group">
+    <label id="stato-label">Stato: </label>
+    <mat-radio-group aria-labelledby="stato-label" formControlName="statoDocumento" aria-label="Stato">
+      <mat-radio-button value="0">Bozza</mat-radio-button>
+      <mat-radio-button value="1">Ufficiale</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <!-- TAGS -->
+  <mat-form-field appearance="outline">
+    <mat-label>Tags</mat-label>
+    <mat-chip-list #tagList aria-label="Tags">
+      <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
+        {{tag}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      <input placeholder="Seleziona dei tag" #tagInput [formControl]="tagsInputControl" [matAutocomplete]="autoTag"
+        [matChipInputFor]="tagList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+    </mat-chip-list>
+    <mat-autocomplete #autoTag="matAutocomplete" (optionSelected)="selectedTag($event)">
+      <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+        {{tag}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <div class="container-actions">
+    <button id="refresh-button" mat-flat-button color="primary" (click)="reset()">
+      Cancella/Pulisci
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button id="search-button" mat-flat-button color="primary" (click)="search()">
+      Cerca
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</form>

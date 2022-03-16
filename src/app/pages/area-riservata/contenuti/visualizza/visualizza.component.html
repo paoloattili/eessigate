@@ -1,0 +1,192 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="page-container-visualizza-contenuti" fxLayout="column" fxLayoutGap="1rem">
+
+    <ng-container *ngIf="listaContenutiPerTipo; else messaggioErrore">
+        <mat-tab-group mat-stretch-tabs>
+            <div fxLayout="column" *ngFor="let tipo of listaContenutiPerTipo">
+                <ng-container *ngIf="tipo.descTipo !== 'Events'">
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <h3>
+                                <span> {{ tipo.descTipo }} </span>
+                            </h3>
+                          </ng-template>
+
+                          <div class="news-container-visualizza-contenuti" fxLayout="column">
+
+                            <!-- ITERO LE NEWS -->
+                            <ng-container *ngIf="tipo.descTipo === 'News'">
+                                <ng-container *ngIf="listaContenutiNews?.length > 0; else nessunContenutoTrovato">
+                                    <div class="filter-table-container">
+                                        <div class="filter-table">
+                                            <mat-form-field appearance="standard" class="form-field-filter">
+                                                <mat-label>Filtra</mat-label>
+                                                <input matInput (keyup)="applyFilter($event, tipo.descTipo)" placeholder="Inserisci testo" #input>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <mat-card *ngFor="let c of obs1 | async" [ngStyle]="{'border-left': 'thick solid ' + tipo.color }" class="card-news-visualizza-contenuti mat-elevation-z4" (click)="openModalPreview(c.token)">
+                                        <mat-card-content>
+                                            <div class="title-container-visualizza-contenuti" fxLayout="row">
+                                                <mat-icon>newspaper</mat-icon>
+                                                <span class="news-title-visualizza-contenuti">{{ c.titolo }}</span>
+                                            </div>
+                                            <div *ngIf="c.sottotitolo" class="subtitle-container-visualizza-contenuti" fxLayout="row">
+                                                <small >{{ c.sottotitolo }}</small>
+                                            </div>
+                                            <mat-divider></mat-divider>
+                                            <div class="card-news-container-visualizza-contenuti">
+                                                <div fxLayout="row wrap">
+                                                    <p class="card-news-sommario"> {{ c.sommario }} </p>
+                                                </div>
+                                            </div>
+                                            <div fxLayout.gt-xs="row" fxLayout="column">
+                                                <div class="author-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="author-name-visualizza-contenuti"> {{ c.nominativo }} </span>
+                                                </div>
+                                                <div class="data-pubblicazione-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="publication-date-label-visualizza-contenuti"> {{ c.dataModifica | date: 'dd-MM-yyyy HH:mm' }} </span>
+                                                </div>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card> 
+
+                                    <mat-paginator #news="matPaginator" 
+                                        [pageSizeOptions]="[10, 25, 50]" 
+                                        aria-label="Select page">
+                                    </mat-paginator>
+
+                                </ng-container>
+
+                                <ng-template #nessunContenutoTrovato>
+                                    <div fxFlexAlign="center center">
+                                        <h4>Nessun contenuto pubblicato.</h4>
+                                    </div>
+                                </ng-template>
+                                
+                                
+                                
+                            </ng-container>
+
+                            <!-- ITERO LE NEWS ESTERNE -->
+                            <ng-container *ngIf="tipo.descTipo === 'News (External)'">
+
+                                <ng-container *ngIf="listaContenutiNewsEsterne?.length > 0; else nessunContenutoTrovato">
+                                    <div class="filter-table-container">
+                                        <div class="filter-table">
+                                            <mat-form-field appearance="standard" class="form-field-filter">
+                                                <mat-label>Filtra</mat-label>
+                                                <input matInput (keyup)="applyFilter($event, tipo.descTipo)" placeholder="Inserisci testo" #input>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <mat-card *ngFor="let c of obs2 | async" [ngStyle]="{'border-left': 'thick solid ' + tipo.color }" class="card-news-visualizza-contenuti mat-elevation-z4" (click)="openModalPreview(c.token)">
+                                        <mat-card-content>
+                                            <div class="title-container-visualizza-contenuti" fxLayout="row">
+                                                <mat-icon>newspaper</mat-icon>
+                                                <span class="news-title-visualizza-contenuti">{{ c.titolo }}</span>
+                                            </div>
+                                            <div *ngIf="c.sottotitolo" class="subtitle-container-visualizza-contenuti" fxLayout="row">
+                                                <small >{{ c.sottotitolo }}</small>
+                                            </div>
+                                            <mat-divider></mat-divider>
+                                            <div class="card-news-container-visualizza-contenuti">
+                                                <div fxLayout="row wrap">
+                                                    <p class="card-news-sommario"> {{ c.sommario }} </p>
+                                                </div>
+                                            </div>
+                                            <div fxLayout.gt-xs="row" fxLayout="column">
+                                                <div class="author-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="author-name-visualizza-contenuti"> {{ c.nominativo }} </span>
+                                                </div>
+                                                <div class="data-pubblicazione-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="publication-date-label-visualizza-contenuti"> {{ c.dataModifica | date: 'dd-MM-yyyy HH:mm' }} </span>
+                                                </div>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                    
+                                    <mat-paginator 
+                                        #newsEsterne="matPaginator"  
+                                        [pageSizeOptions]="[10, 25, 50]" 
+                                    aria-label="Select page"></mat-paginator>
+
+                                </ng-container>
+
+                                <ng-template #nessunContenutoTrovato>
+                                    <div fxFlexAlign="center center">
+                                        <h4>Nessun contenuto pubblicato.</h4>
+                                    </div>
+                                </ng-template>
+                                
+                                
+                            </ng-container>
+
+                            <!-- ITERO LE NEWS FORMAZIONE -->
+                            <ng-container *ngIf="tipo.descTipo === 'Formazione'">
+
+                                <ng-container *ngIf="listaContenutiNewsFormazione?.length > 0; else nessunContenutoTrovato">
+                                    <div class="filter-table-container">
+                                        <div class="filter-table">
+                                            <mat-form-field appearance="standard" class="form-field-filter">
+                                                <mat-label>Filtra</mat-label>
+                                                <input matInput (keyup)="applyFilter($event, tipo.descTipo)" placeholder="Inserisci testo" #input>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <mat-card *ngFor="let c of obs3 | async" [ngStyle]="{'border-left': 'thick solid ' + tipo.color }" class="card-news-visualizza-contenuti mat-elevation-z4" (click)="openModalPreview(c.token)">
+                                        <mat-card-content>
+                                            <div class="title-container-visualizza-contenuti" fxLayout="row">
+                                                <mat-icon>newspaper</mat-icon>
+                                                <span class="news-title-visualizza-contenuti">{{ c.titolo }}</span>
+                                            </div>
+                                            <div *ngIf="c.sottotitolo" class="subtitle-container-visualizza-contenuti" fxLayout="row">
+                                                <small >{{ c.sottotitolo }}</small>
+                                            </div>
+                                            <mat-divider></mat-divider>
+                                            <div class="card-news-container-visualizza-contenuti">
+                                                <div fxLayout="row wrap">
+                                                    <p class="card-news-sommario"> {{ c.sommario }} </p>
+                                                </div>
+                                            </div>
+                                            <div fxLayout.gt-xs="row" fxLayout="column">
+                                                <div class="author-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="author-name-visualizza-contenuti"> {{ c.nominativo }} </span>
+                                                </div>
+                                                <div class="data-pubblicazione-visualizza-contenuti" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                                    <span class="publication-date-label-visualizza-contenuti"> {{ c.dataModifica | date: 'dd-MM-yyyy HH:mm' }} </span>
+                                                </div>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card> 
+
+                                    <mat-paginator #newsFormazione="matPaginator"
+                                     [pageSizeOptions]="[10, 25, 50]" 
+                                     aria-label="Select page"></mat-paginator>
+
+                                </ng-container>
+
+                                <ng-template #nessunContenutoTrovato>
+                                    <div fxFlexAlign="center center">
+                                        <h4>Nessun contenuto pubblicato.</h4>
+                                    </div>
+                                </ng-template>
+                                
+                                
+                            </ng-container>
+
+                          </div>
+
+                    </mat-tab>
+                </ng-container>
+            </div>
+        </mat-tab-group>
+    </ng-container>
+    <ng-template #messaggioErrore>
+        <div fxLayout="column" fxLayoutAlign="start center">
+            <h3>Non è stato possibile recuperare i contenuti. Si prega di riprovare.</h3>
+        </div>
+    </ng-template>
+    
+</div>

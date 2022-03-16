@@ -1,0 +1,126 @@
+<div class="contenuti-wrapper">
+    <mat-card class="contenuti-card mat-elevation-z8">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>apps</mat-icon>
+            <mat-card-title>Lista Contenuti</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="lista-contenuti-container">
+                <div class="wrapper-table">
+                    <div class="table-action-container" fxLayout.xs="column" fxLayout.gt-xs="row">
+                        <div class="button-upload" fxFlex="30" fxFlexAlign="center" fxFlex.lt-sm="100">
+                          <mat-form-field appearance="fill">
+                            <mat-label>Filtra Tipi Contenuti</mat-label>
+                            <mat-select [formControl]="filtraTipoContenuti">
+                                <mat-option *ngFor="let c of contentTypes" [value]="c?.token">
+                                    {{c?.nome}}
+                                </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="filter-table-container" fxFlex="70" fxFlex.lt-sm="100">
+                            <div class="filter-table">
+                                <mat-form-field appearance="standard" class="form-field-filter">
+                                    <mat-label>Filtra</mat-label>
+                                    <input matInput (keyup)="applyFilter($event)" placeholder="Inserisci testo" #input>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table mat-table [dataSource]="dataSource" matSort>
+
+                            <!-- ULTIMA MODIFICA Column -->
+                            <ng-container matColumnDef="dataModifica">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ultima Modifica </th>
+                                <td mat-cell *matCellDef="let row"> {{row?.dataModifica | date: 'dd-MM-yyyy HH:mm'}} </td>
+                            </ng-container>
+
+                            <!-- TITOLO Column -->
+                            <ng-container matColumnDef="titolo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
+                                <td mat-cell *matCellDef="let row"> {{row?.titolo}} </td>
+                            </ng-container>
+
+                            <!-- STATO Column -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <ng-container *ngIf="statusBySezione === 1">
+                                        <mat-icon [matTooltip]="row?.status">
+                                            {{
+                                                (row?.status === 'RIGETTATO'? 'block' : 'edit')
+                                            }}
+                                        </mat-icon>
+                                    </ng-container>
+                                    <ng-container *ngIf="statusBySezione === 2">
+                                        <mat-icon [matTooltip]="row?.status">change_circle</mat-icon>
+                                    </ng-container>
+                                    <ng-container *ngIf="statusBySezione === 3">
+                                        <mat-icon [matTooltip]="row?.status">
+                                            {{
+                                                (row?.status === 'DA PUBBLICARE'? 'published_with_changes' : 'check_circle')
+                                            }}
+                                        </mat-icon>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+
+                            <!-- NOTE Column -->
+                            <ng-container matColumnDef="wfNote">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Note </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-icon 
+                                        [matTooltip]=
+                                            "(row?.wfNote? row?.wfNote : '')">
+                                        {{ row?.wfNote? 'sticky_note_2' : 'minimize' }}
+                                    </mat-icon>
+                                </td>
+                            </ng-container>
+
+                            <!-- PREVIEW Column -->
+                            <ng-container matColumnDef="preview">
+                                <th mat-header-cell *matHeaderCellDef> Preview </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <button mat-button class="basic-button-primary" (click)="openModalPreview(row.token)">
+                                        <mat-icon>visibility</mat-icon>&nbsp;
+                                        <span>Preview</span>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <!-- AZIONI Column -->
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef> Azioni </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <button mat-raised-button class="button-primary" [matMenuTriggerFor]="menu"> Azioni<mat-icon>arrow_drop_down</mat-icon></button>
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item *ngIf="statusBySezione === 1 || statusBySezione === 2" (click)="goToDetail(row.token)"> Dettaglio</button>
+                                        <button mat-menu-item *ngIf="statusBySezione === 2" (click)="doApprove(row.token)"> Approva </button>                                    
+                                        <button mat-menu-item *ngIf="statusBySezione === 3 && row.status === 'DA PUBBLICARE'" (click)="doPubblica(row.token)"> Pubblica </button>
+                                        <button mat-menu-item *ngIf="statusBySezione === 3 && row.status === 'PUBBLICATO'" (click)="dePubblica(row.token)"> Depubblica </button>
+                                        <button mat-menu-item *ngIf="statusBySezione === 2 || statusBySezione === 3" (click)="rigetta(row.token)"> Rigetta </button>
+                                        <button mat-menu-item *ngIf="statusBySezione === 1" (click)="delete(row.token)"> Elimina </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="6">Nessun elemento trovato </td>
+                            </tr>
+
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[10, 25, 100]"
+                            aria-label="Selezione la pagina degli elementi"></mat-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

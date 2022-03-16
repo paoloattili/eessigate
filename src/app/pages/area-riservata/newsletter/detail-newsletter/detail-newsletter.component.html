@@ -1,0 +1,450 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="page-container">
+
+  <mat-card class="generic-card mat-elevation-z8" fxLayout="column">
+    
+    <mat-card-header class="generic-card-header">
+      <mat-icon mat-card-avatar>apps</mat-icon>
+      <mat-card-title>Dettaglio</mat-card-title>
+    </mat-card-header>
+
+    <div class="newsletter-content" fxLayout="column">
+
+      <mat-card-content class="generic-card-content">
+
+        <div fxLayout="column">
+
+          <div class="label">
+            <mat-icon class="icon-label">info</mat-icon>
+            <strong>Informazioni</strong>
+          </div>
+
+          <div class="container-info">
+            <div class="box-info">
+              <span class="label-info">Sottotitolo:</span>&nbsp;<span>{{ dettaglio?.sottotitolo }}</span>
+            </div>
+  
+            <div class="box-info">
+              <span class="label-info">Data invio:</span>&nbsp;<span>{{ dettaglio?.creationDate | date:'dd-MM-yyyy: hh:mm' }}</span>
+            </div>
+  
+            <div class="box-info">
+              <span class="label-info">Data inizio recupero contenuti:</span>&nbsp;<span>{{ dettaglio?.fromDate | date:'dd-MM-yyyy' }}</span>
+            </div>
+  
+            <div class="box-info">
+              <span class="label-info">Data fine recupero contenuti:</span>&nbsp;<span>{{ dettaglio?.toDate | date:'dd-MM-yyyy' }}</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="label">
+            <mat-icon class="icon-label">mail</mat-icon>
+            <strong>Body</strong>
+          </div>
+
+          <div class="body-container">
+            <div class="body" *ngTemplateOutlet="bodyNewletter"></div>
+          </div>
+
+        </div>
+
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions fxFlexAlign="center center" class="genic-card-content">
+
+        <button class="button-primary" mat-flat-button (click)="backToRicerca()">
+            <mat-icon>search</mat-icon>
+            <span>Torna alla ricerca</span>
+        </button>
+
+      </mat-card-actions>
+
+    </div>
+
+  </mat-card>
+
+</div>
+
+<ng-template #bodyNewletter>
+  <!-- TEMPLATE NEWSLETTER -->
+  <table  width="900" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center">
+      <tbody id="body-template">
+          <tr id="titolo">
+              <td width="900" bgcolor="#3c8dbc" height="100" align="center" style="padding-left: 20px; font-size: 45px; font-weight: bold;">
+                  <span style="color: #fff; font-family: Calibri, Helvetica, sans-serif;">Newsletter EESSIGate </span>
+              </td>
+          </tr>
+          <tr id="intestazione">
+              <td width="900" bgcolor="#c4ddeb" height="50" align="left" style="padding-top: 15px;">
+                  <table width="100%" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center" style="background-color: rgb(196, 221, 235);">
+                      <tbody>
+                          <tr>
+                              <td width="80" align="left" style="float: left;font-size: 18px; font-weight: normal; color: #000; font-family: Calibri, Helvetica, sans-serif; font-style: italic; padding-bottom: 10px; padding-left: 20px;">
+                                  <span id="sottitoloNewsletter">{{ dettaglio?.sottotitolo }}</span>
+                              </td>
+                              <td width="310" align="right" style="font-size: 18px; font-weight: normal; color: #000; font-family: Calibri, Helvetica, sans-serif; padding-bottom: 10px; padding-right: 20px;">
+                                  <span>Periodo Rif.:&nbsp;</span>
+                                  <span id="dataInizio">{{ dettaglio.fromDate | date:'dd/MM/yyyy' }}</span>
+                                  -&nbsp;<span id="dataFine">{{ dettaglio.toDate | date:'dd/MM/yyyy' }}</span>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <table width="100%" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center">
+                      <tbody>
+                          <tr>
+                              <td width="300" height="13" bgcolor="#009246"></td>
+                              <td width="300" height="13" bgcolor="#ffffff"></td>
+                              <td width="300" height="13" bgcolor="#ce2b37"></td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </td>
+          </tr>
+          <ng-container *ngFor="let sezione of sezioni">
+              <!-- NEWS -->
+              <tr id="news" *ngIf="sezione === '1'">
+                  <td width="900" style="padding-top: 40px;">
+                      <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                          <tbody>
+                              <tr>
+                                  <td width="40" align="left" border="0" style="background-color: #009246; opacity: 1;"></td>
+                                  <td width="820" style="padding: 0 40px 0 40px;">
+                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="720" style="padding-bottom: 25px;">
+                                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td width="720" style="padding-top: 27px;">
+                                                                      <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #009246;opacity: 1; float: left;">News</span>
+                                                                  </td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                      <!-- ITERO NEWS -->
+                                                                      <ng-container *ngIf="argomentiNews?.length > 0; else nessunaNews">
+                                                                          <ng-container *ngFor="let n of argomentiNews; let i=index">
+                                                                              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                  <tbody>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-size: 16px; float: left;">
+                                                                                              <span style="font-weight: normal;">Autore</span>&nbsp; <span style="font-weight: bold;"> {{ n.author }} </span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                              <span style="font-weight: normal;"> {{ n.dataPubblicazione | date:'dd/MM/yyyy hh:mm' }} </span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                              <a [href]="'EESSIGateWEB/area-riservata/contenuti/visualizza-contenuti?cryptKey='+n.token"> {{ n.titolo }} </a>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="font-weight: normal; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                              <p style="margin-bottom: 0;"> {{ n.sommario }} </p>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                  </tbody>
+                                                                              </table>
+                                                                              <hr *ngIf="i < (argomentiNews?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                          </ng-container>
+                                                                      </ng-container>
+                                                                      <ng-template #nessunaNews>
+                                                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                          <span>Nessuna news trovata nel range indicato.</span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </ng-template>                                                                 
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+              <!-- NEWS ETERNE-->
+              <tr id="news-esterne" *ngIf="sezione === '5'">
+                  <td width="900" style="padding-top: 40px;">
+                      <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                          <tbody>
+                              <tr>
+                                  <td width="40" align="left" border="0" style="background-color: #b3000c; opacity: 1;"></td>
+                                  <td width="820" style="padding: 0 40px 0 40px;">
+                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="720" style="padding-bottom: 25px;">
+                                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td width="720" style="padding-top: 27px;">
+                                                                      <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #b3000c;opacity: 1;float: left;">News (External)</span>
+                                                                  </td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                      <!-- ITERO NEWS ESTERNE -->
+                                                                      <ng-container *ngIf="argomentiNewsEsterne?.length > 0; else nessunaNewsEsterna">
+                                                                          <ng-container *ngFor="let n of argomentiNewsEsterne; let i=index">
+                                                                              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                  <tbody>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-size: 16px; float: left;">
+                                                                                              <span style="font-weight: normal;">Autore</span>&nbsp; <span style="font-weight: bold;"> {{ n.author }} </span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                              <span style="font-weight: normal;"> {{ n.dataPubblicazione | date:'dd/MM/yyyy hh:mm' }} </span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                              <a [href]="'EESSIGateWEB/area-riservata/contenuti/visualizza-contenuti?cryptKey='+n.token"> {{ n.titolo }} </a>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="font-weight: normal; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                              <p style="margin-bottom: 0;"> {{ n.sommario }} </p>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                  </tbody>
+                                                                              </table>
+                                                                              <hr *ngIf="i < (argomentiNewsEsterne?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                          </ng-container>
+                                                                      </ng-container>
+                                                                      <ng-template #nessunaNewsEsterna>
+                                                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                          <span>Nessuna news esterna trovata nel range indicato.</span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </ng-template>    
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+              <!-- EVENTI -->
+              <tr id="eventi" *ngIf="sezione === '8'">
+                  <td width="900" style="padding-top: 40px;">
+                      <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                          <tbody>
+                              <tr>
+                                  <td width="40" align="left" border="0" style="background-color: #ff7c00; opacity: 1;"></td>
+                                  <td width="820" style="padding: 0 40px 0 40px;">
+                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="720" style="padding-bottom: 25px;">
+                                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td width="720" style="padding-top: 27px;">
+                                                                      <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #ff7c00;opacity: 1;float: left;">Eventi</span>
+                                                                  </td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                      <!-- ITERO GLI EVENTI -->
+                                                                      <ng-container *ngIf="argomentiEventi?.length > 0; else nessunEvento">
+                                                                          <ng-container *ngFor="let e of argomentiEventi; let i=index">
+                                                                              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                  <tbody>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                              <img alt="newsletter_calendar" border="0" width="17" height="17" src="assets/images/calendar.png" />&nbsp;<a href="EESSIGateWEB/eventi/calendario">{{ e.titolo }}</a>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;padding-bottom: 20px;font-style: italic;float: left;">
+                                                                                              <span style="font-weight: normal;">{{ e.dataInizio | date:'dd/MM/yyyy hh:mm' }}</span>&nbsp;-&nbsp;<span style="font-weight: normal;">{{ e.dataFine | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;float: left;">
+                                                                                              <span style="font-weight: bold;">{{ e.labelLocation }}</span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;float: left;">
+                                                                                              <span style="font-weight: normal;">Scadenza registrazione:&nbsp;</span><span style="font-weight: normal;">{{ e.dataChiusura | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                  </tbody>
+                                                                              </table>
+                                                                              <hr *ngIf="i < (argomentiEventi?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                          </ng-container>
+                                                                      </ng-container>
+                                                                      <ng-template #nessunEvento>
+                                                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                          <span>Nessun evento trovato nel range indicato.</span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </ng-template>        
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+              <!-- DOCUMENTI -->
+              <tr id="documenti" *ngIf="sezione === '2'">
+                  <td width="900" style="padding-top: 40px;">
+                      <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                          <tbody>
+                              <tr>
+                                  <td width="40" align="left" border="0" style="background-color: #3c8dbc; opacity: 1;"></td>
+                                  <td width="820" style="padding: 0 40px 0 40px;">
+                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="720" style="padding-bottom: 25px;">
+                                                      <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td width="720" style="padding-top: 27px;">
+                                                                      <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #3c8dbc;opacity: 1;float: left;">Documenti</span>
+                                                                  </td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                      <!-- ITERO I DOCUMENTI -->
+                                                                      <ng-container *ngIf="argomentiDocumento?.length > 0; else nessunDocumento">
+                                                                          <ng-container *ngFor="let d of argomentiDocumento; let i=index">
+                                                                              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                  <tbody>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1;font-size: 16px;float: left;">
+                                                                                              <span style="font-weight: normal;">Uploader</span>&nbsp; <span style="font-weight: bold;">{{ d.author }}</span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                              <span style="font-weight: normal;">{{ d.creationDate | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                      <tr>
+                                                                                          <td align="left" style="">
+                                                                                              <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                                                                  <tbody>
+                                                                                                      <tr>
+                                                                                                          <td align="left" style="float: left;">
+                                                                                                              <a [href]="d.categoryType !== null && d.categoryType === 'NG.EDE Accounting & Deliverables'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/accounting-and-deliverables/detail-documento?cryptKey='+d.token 
+                                                                                                              : d.categoryType !== null && d.categoryType === 'NG.EDE Documentation'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/ng-documentation/detail-documento?cryptKey='+d.token 
+                                                                                                              : d.categoryType !== null && d.categoryType === 'EESSI News & Documentation'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/eessi-news-documentation/detail-documento?cryptKey='+d.token : ''"
+                                                                                                              style="letter-spacing: 0px; color: #0468bf; opacity: 1; font-weight: bold; font-size: 18px;">{{ d.titolo }}</a>&nbsp;<span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 16px;">/&nbsp;</span>
+                                                                                                              <span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 16px;">{{ d.documentType }}</span>
+                                                                                                          </td>
+                                                                                                          <td align="right" style="float: right;">
+                                                                                                              <img alt="header_newsletter_commenti" border="0" width="25" height="15" src="assets/images/Raggruppa242.png" />&nbsp;&nbsp;<span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 14px;">{{ d.countCommenti }} commenti</span>
+                                                                                                          </td>
+                                                                                                      </tr>
+                                                                                                  </tbody>
+                                                                                              </table>
+                                                                                          </td>
+                                                                                      </tr>
+                                                                                  </tbody>
+                                                                              </table>
+                                                                              <hr *ngIf="i < (argomentiDocumento?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                          </ng-container>
+                                                                      </ng-container>
+                                                                      <ng-template #nessunDocumento>
+                                                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                          <span>Nessun documento trovato nel range indicato.</span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </ng-template>     
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+          </ng-container>
+          <tr id="footer">
+              <td style="padding-top: 45px;" width="900">
+                  <table width="100%" style="top: 372px; left: 62px; background-color: #c4ddeb; opacity: 1; border: 0;" cellspacing="0" cellpadding="0" align="center">
+                      <tbody>
+                          <tr>
+                              <td align="left" style="padding: 15px 6px 15px 15px;"><img height="30" style="padding-right: 6px;" src="assets/images/flag-of-europe.png" alt="logo EU" /></td>
+                              <td align="left" valign="center" style="font-size: 13px; font-family: Calibri, Helvetica, sans-serif;">
+                                  <strong>Copyright © EESSI<i>GATE</i> 2018 </strong> |
+                                  <img height="17" src="assets/images/logo-INPS-2.png" alt="Logo INPS" />
+                                  -
+                                  <img height="18" src="assets/images/logo-INAIL-2.png" alt="Logo INAIL" />
+                                  &nbsp;&nbsp;NG.EDE - National Gateway for European Data Exchange
+                              </td>
+                              <td align="right" style="padding-right: 15px;font-size: 14px;">
+                                  <a href="#" style="padding-left: 75px;"><strong>Contattaci</strong></a>
+                                  <strong> | </strong>
+                                  <a href="#"><strong>Disclaimer</strong></a>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+</ng-template>

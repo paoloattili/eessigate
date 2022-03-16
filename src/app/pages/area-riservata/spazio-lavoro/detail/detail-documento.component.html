@@ -1,0 +1,237 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="main-container" fxLayout="row" fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutGap="1rem"
+     fxLayoutGap.lt-lg="1rem">
+
+  <!-- CONTAINER SX -->
+  <div class="left-container" fxFlex="40%" fxFlex.gt-lg="40%" fxFlex.lt-lg="100%">
+
+
+    <mat-card class="generic-card mat-elevation-z8">
+
+      <mat-card-header class="generic-card-header">
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Scheda</mat-card-title>
+      </mat-card-header>
+
+      <div class="container-content">
+        <mat-card-content>
+
+          <div class="container-info-items">
+
+            <!-- cartella -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>folder</mat-icon>
+                <span class="item-name">Cartella</span>
+              </div>
+              <div class="item-right">{{ documento?.categoryName ? documento.categoryName : '-' }}</div>
+            </div>
+
+            <!-- organizzazione -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>account_balance</mat-icon>
+                <span class="item-name">Organizzazione</span>
+              </div>
+              <div class="item-right">{{ documento?.organizzazione ? documento.organizzazione : '-' }}</div>
+            </div>
+
+            <!-- autore -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>person</mat-icon>
+                <span class="item-name">Autore</span>
+              </div>
+              <div class="item-right">{{ documento?.author ? documento.author : '-' }}</div>
+            </div>
+
+            <!-- nome documento -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>book</mat-icon>
+                <span class="item-name">Nome documento</span>
+              </div>
+              <div class="item-right word-break">{{ documento?.fileName ? documento.fileName : '-' }}</div>
+            </div>
+
+            <!-- tipologia documento -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>folder</mat-icon>
+                <span class="item-name">Tipologia documento</span>
+              </div>
+              <div class="item-right">{{ documento?.documentType ? documento.documentType : '-' }}</div>
+            </div>
+
+            <!-- visibilita -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>remove_red_eye</mat-icon>
+                <span class="item-name">Visibilità</span>
+              </div>
+              <div class="item-right">{{ documento?.visibilita ? documento.visibilita : '-' }}</div>
+            </div>
+
+
+            <mat-divider></mat-divider>
+
+            <!-- uploader -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>person</mat-icon>
+                <span class="item-name">Uploader</span>
+              </div>
+              <div class="item-right">{{ documento?.author ? documento.author : '-' }}</div>
+            </div>
+
+            <!-- data creazione -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="item-name">Data creazione</span>
+              </div>
+              <div class="item-right">{{ documento?.creationDate | date: 'dd-MM-yyyy' }}</div>
+            </div>
+            <!-- data ultima modifica -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="item-name">Utlima modifica</span>
+              </div>
+              <div class="item-right">{{ documento?.lastModified | date: 'dd-MM-yyyy' }}</div>
+            </div>
+
+
+            <mat-divider></mat-divider>
+
+            <!-- tags -->
+            <div class="item" [ngClass]="{'column': tagsDocumento.length > 0 }">
+              <div class="item-left">
+                <mat-icon>label</mat-icon>
+                <span class="item-name">Tags</span>
+              </div>
+              <div *ngIf="tagsDocumento.length > 0; else noTags" class="item-row">
+                <mat-chip-list>
+                  <mat-chip *ngFor="let tag of tagsDocumento">{{ tag.tag  }}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <ng-template #noTags>
+                <div class="item-right">Nessun tag da mostrare</div>
+              </ng-template>
+            </div>
+
+          </div>
+
+        </mat-card-content>
+
+        <ng-container *ngIf="documento.toPublish === 0 && documento.published === 0 && canDo">
+          <mat-divider></mat-divider>
+          <mat-card-actions class="container-actions">
+
+            <!-- rimuovi -->
+            <button mat-raised-button color="warn" class="action-item delete" (click)="deleteDocumento()">
+              <mat-icon>delete</mat-icon>
+              <span class="action-name">Rimuovi</span>
+            </button>
+
+            <!-- modifica -->
+            <button mat-raised-button color="primary" class="action-item modify" (click)="editDocumento()">
+              <mat-icon>edit</mat-icon>
+              <span class="action-name">Modifica</span>
+            </button>
+          </mat-card-actions>
+        </ng-container>
+
+
+      </div>
+
+    </mat-card>
+
+
+  </div>
+
+  <!-- CONTAINER DX -->
+  <div class="right-container" fxFlex="60%" fxFlex.gt-lg="60%" fxFlex.lt-lg="100%">
+
+
+    <mat-card class="generic-card mat-elevation-z8">
+      <mat-card-header class="generic-card-header">
+        <mat-icon mat-card-avatar>apps</mat-icon>
+        <mat-card-title>Informazioni</mat-card-title>
+      </mat-card-header>
+
+      <div class="container-content">
+
+        <mat-card-content>
+          <div class="header-discussione">
+            <mat-icon>public</mat-icon>
+            <span>Social</span>
+          </div>
+
+          <div class="container-info" fxLayout="row" fxLayoutAlign="center center">
+
+            <!-- LIKES -->
+            <div class="container-likes-count" fxLayout="row" fxLayoutAlign="center center"
+                 [ngClass]="likeAttivato === true ?'like-attivo': 'like-non-attivo'">
+              <button mat-button fxLayout="row" fxLayoutAlign="center center" (click)="likeToogle()">
+                <mat-icon>thumb_up</mat-icon>
+                <span>Likes ({{ documento.countLike }})</span>
+              </button>
+            </div>
+
+            <!-- url copy paste-->
+            <div class="container-url">
+              <mat-form-field appearance="outline">
+                <mat-label>URL Dettaglio documento</mat-label>
+                <input class="bg-black" matInput type="search" [value]="urlDocumento" disabled>
+                <button
+                  mat-button matSuffix
+                  [cdkCopyToClipboard]="urlDocumento"
+                  matTooltip="Copy to clipboard"
+                  (click)="openSnackBar()"
+                  aria-label="search">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div class="header-discussione">
+            <mat-icon>info</mat-icon>
+            <span>Descrizione</span>
+          </div>
+
+          <div class="container-description">
+            {{ documento.description }}
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="container-discussione">
+            <app-chat
+              [comments]="documento?.comments"
+              (commentEvent)="inviaComment($event)"
+              (eliminaCommentoEvent)="eliminaCommento($event)"></app-chat>
+          </div>
+
+          <mat-divider></mat-divider>
+        </mat-card-content>
+
+
+        <mat-card-actions class="container-actions">
+          <button mat-raised-button color="primary" class="action-item download" (click)="downloadDocumento()">
+            <mat-icon>download</mat-icon>
+            <span class="action-name">Download</span>
+          </button>
+        </mat-card-actions>
+
+      </div>
+    </mat-card>
+
+
+  </div>
+
+
+</div>

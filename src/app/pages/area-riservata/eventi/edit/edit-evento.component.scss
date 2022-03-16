@@ -1,0 +1,120 @@
+.mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
+
+#info-form, #luogo-form, #destinatari-form {
+  width: 100%;
+}
+
+mat-form-field.mat-field-evento-stepper {
+  width: 100%;
+}
+
+.container-steps {
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.container-content{
+  .container-complete {
+    text-align: center;
+    .container-icon {
+      width: 100%;
+      mat-icon {
+        width: 100%;
+        font-size: 10rem;
+        color: #009246;
+      }
+    }
+
+    .testo-complete {
+      font-size: xx-large;
+    }
+  }
+}
+
+.btn-container {
+  width: 100% !important;
+}
+
+.input-date {
+  min-width: 13rem;
+}
+
+/**
+File field
+ */
+
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
+.fileForm {
+  button[color="primary"] {
+    background-color: #0065cb;
+    height: 50px;
+  }
+
+  button.btn-error {
+    height: 50px;
+  }
+
+}
+
+mat-form-field.form-field-file {
+  margin: -0.25em 10px -0.25em 10px !important;
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+
+#uploadAttachment {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  position: absolute;
+}
+
+/**
+configurazione page
+ */
+.page-container {
+  padding: 20px 0;
+  min-height: 400px;
+  margin: auto;
+}
+
+/**
+Generic Card
+ */
+mat-card.generic-card {
+  padding: 0 0 0 0 !important;
+  margin: auto;
+  width: 100% !important;
+
+  .container-content {
+    width: 90% !important;
+    margin: 10px auto 0 auto;
+    padding: 10px 20px 10px 20px;
+
+    mat-card-content.generic-card-content {
+      margin-bottom: 0 !important;
+    }
+
+    mat-divider {
+      position: relative;
+    }
+    mat-card-actions.generic-card-content {
+      margin-top: 10px;
+      margin-bottom: 0 !important;
+      margin-left: 0 !important;
+    }
+
+  }
+}
+// Generic card end

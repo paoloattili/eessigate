@@ -1,0 +1,95 @@
+.page-container {
+    padding: 20px 0;
+    min-height: 400px;
+    max-width: 1024px;
+    margin: auto;
+}
+
+ /**
+  Generic Card
+   */
+mat-card.generic-card {
+    padding: 0 0 0 0 !important;
+  
+    mat-card-header.generic-card-header {
+      height: 57px;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      background-color: #0065cb;
+      border-radius: 4px 4px 0 0;
+      color: #fff;
+    }
+  
+    mat-card-header.generic-card-header > *{
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: left;
+      margin: 0 16px 0 16px !important;
+    }
+  
+    mat-card-header.generic-card-header > mat-icon {
+      width: auto !important;
+    }
+  
+    mat-card-header.generic-card-header mat-card-title{
+      margin: 0 -16px !important;
+      font-size: 17px !important;
+      font-weight: bold !important;
+    }
+
+    .newsletter-content {
+        width: 90% !important;
+        margin: 10px auto 0 auto;
+        padding: 10px 20px 10px 20px;
+    
+        mat-card-content.genic-card-content {
+          margin-bottom: 0 !important;
+        }
+    
+        mat-divider {
+          position: relative;
+        }
+        mat-card-actions.genic-card-content {
+          margin-top: 10px;
+          margin-bottom: 0 !important;
+          margin-left: 0 !important;
+        }
+
+        .container-icon {
+            padding: 4rem;
+        }
+
+        .container-primo-blocco {
+            margin-bottom: 1rem;
+        }
+
+        .sezioni-container, .destinatari-container {
+            margin: 0.5rem 0;
+            display: block !important;
+        }
+
+        .label-sezioni h2 {
+            margin-bottom: 0;
+        }
+
+        button span {
+            margin-left: 5px;
+        }
+
+        mat-radio-button {
+            margin: 1rem 0;
+        }
+
+        @media(min-width: 960px) {
+            .empty-field {
+                height: 4.0rem;
+            }
+        }
+        
+        .errors-container {
+          margin-top: 0.5rem;
+        }
+    }
+}

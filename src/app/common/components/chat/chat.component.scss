@@ -1,0 +1,154 @@
+.container-discussione {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-discussione {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 5px 0 10px 0;
+}
+
+
+.body-discussione {
+  display: block;
+  height: 350px;
+  width: 80%;
+  max-width: 500px;
+  margin: 10px auto 10px auto;
+  overflow-y: auto !important;
+
+  .container-data {
+    text-align: center;
+  }
+
+  .container-message {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 15px;
+
+    &.received {
+      padding-left: 10px;
+      align-items: start;
+      justify-content: left;
+    }
+
+    &.sent {
+      padding-right: 10px;
+      align-items: end;
+      justify-content: right;
+    }
+
+    $background-comment: #00597f;
+
+    .message {
+      max-width: 70%;
+      background-color: $background-comment;
+      border-radius: 4px;
+      padding: 5px 10px 5px 10px;
+      color: white;
+      position: relative;
+
+      $border-size: 1px;
+      $border-height: calc(#{3*$border-size});
+      $border-width: calc(#{4*$border-size});
+
+      &.message-received:after {
+        position: absolute;
+        content: '';
+        box-sizing: border-box;
+        width: 0;
+        height: 0;
+        top: auto;
+        left: 10px;
+        right: auto;
+        bottom: calc(-2 * #{$border-height});
+        border-top: $border-height solid;
+        border-right: $border-width solid;
+        border-bottom: $border-height solid;
+        border-left: $border-width solid;
+        border-color: $background-comment transparent transparent $background-comment;
+      }
+
+      &.message-sent:after {
+        position: absolute;
+        content: '';
+        box-sizing: border-box;
+        width: 0;
+        height: 0;
+        top: auto;
+        left: auto;
+        right: 10px;
+        bottom: calc(-2 * #{$border-height});
+        border-top: $border-height solid;
+        border-right: $border-width solid;
+        border-bottom: $border-height solid;
+        border-left: $border-width solid;
+        border-color: $background-comment $background-comment transparent transparent;
+      }
+
+      .message-user {
+        text-align: left;
+        font-weight: bold;
+        font-size: x-small;
+        width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .message-text {
+      }
+
+      .message-time {
+        text-align: right;
+        font-size: xx-small;
+      }
+    }
+  }
+
+}
+
+.footer-discussione {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    width: 100% !important;
+    margin-right: 10px;
+    .input-commento {
+      width: 100% !important;
+
+      .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+      }
+    }
+  }
+
+  .invia-commento {
+    background-color: #0065cb !important;
+
+    .mat-button-wrapper {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,252 @@
+.page-container {
+    padding: 0.8rem 0;
+
+    mat-tab-header {
+        border-bottom: 0;
+
+        .mat-tab-label {
+            &.mat-tab-label-active {
+              opacity: 1 !important;
+            }
+        }
+
+        .mat-ink-bar {
+            height: 4px;
+        }
+    }
+
+    .sezione-news div > h3 {
+        margin-top: 0;
+    }
+
+    // mat-card.card-news {
+    //     height: 15rem;
+
+    //     .title-news {
+    //         max-height: 5rem;
+    //         white-space: nowrap;
+    //         overflow: hidden;
+    //         text-overflow: ellipsis;
+    //     }
+
+    //     .subtitle-news {
+    //         max-height: 5rem;
+    //         white-space: nowrap;
+    //         overflow: hidden;
+    //         text-overflow: ellipsis;
+    //     }
+
+    //     mat-card-header.card-header-news > div.mat-card-header-text{
+    //         margin: 0;
+    //     }
+
+    //     mat-divider {
+    //         position: relative;
+    //     }
+
+    //     ng-scrollbar {
+    //         height: 9rem;
+    //         --scrollbar-size: 8px;
+    //         --scrollbar-border-radius: 4px;
+    //     }
+
+    //     p, .footer-news {
+    //         padding: 0 .6rem;
+    //     }
+        
+    // }
+
+    // mat-card.card-news:hover, mat-card.card-news:focus, mat-card.card-news:active {
+    //     cursor: pointer;
+    //     background-color: #0000000a;
+    // }
+
+    .news-container {
+        padding: .8rem;
+    }
+
+    mat-card.card-news {
+        height: 9.3rem;
+        margin: .8rem 0;
+        cursor: pointer;
+        // padding: 1rem 2rem;
+    
+        .title-container {
+            margin: .5rem 0;
+            font-size: 17px;
+            font-weight: bolder;
+        }
+    
+        .title-container > mat-icon {
+            margin-top: 4px;
+        }
+    
+        .news-title {
+            margin: 2px 0 0 5px;
+        }
+    
+        .subtitle-container {
+            margin: .5rem 0;
+            font-size: 14px;
+        }
+    
+        mat-divider {
+            position: relative;
+        }
+
+        ng-scrollbar {
+            height: 5.5rem;
+            --scrollbar-size: 8px;
+            --scrollbar-border-radius: 4px;
+        }
+    
+        .card-news-container {
+            overflow-y: auto;
+            max-height: 40rem;
+        }
+    
+        .author {
+            justify-content: start;
+        }
+    
+        .author-name {
+            font-size: 80%;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .author-name::before {
+            font-family: "Material Icons";
+            content: "\e931";
+        }
+    
+        .data-pubblicazione {
+            justify-content: end;
+        }
+        
+        .publication-date-label {
+            font-size: 80%;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 1280px) {
+            .title-container {
+                max-width: 41rem;
+                
+                span {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+    
+    mat-card.card-news:hover {
+        background-color: #0000000a;
+    }
+
+    .mostra-altre {
+        margin: 1rem 0;
+    }
+
+    .label-tutte-news {
+        color: #0065cb;
+    }
+
+    .label-tutte-news:focus,.label-tutte-news:active,.label-tutte-news:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .label-news-assenti {
+        margin-top: 0;
+    }
+
+    .documents-container {
+        padding: .8rem;
+    }
+
+    .doc-card {
+        height: 9.3rem;
+        margin: .8rem 0;
+        border-left: thick solid #0065cb;
+    }
+
+    .link {
+        font-weight: bold;
+        color: #0065cb;
+    }
+
+    .link:focus,.link:active,.link:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    @media (max-width: 1280px) {
+        .titolo-doc {
+            max-width: 14rem;
+            
+            p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .tipo-doc {
+            max-width: 12rem;
+            
+            span {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    @media (max-width: 620px) {
+        .doc-card {
+            padding-bottom: 2rem;
+        }
+
+        .titolo-doc {
+            max-width: 18rem;
+            
+            p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .tipo-doc {
+            max-width: 18rem;
+            
+            span {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .download-doc {
+        margin: 0 0 0.8rem 0;
+    }
+
+    .author-name {
+        font-size: 80%;
+        color: #6c757d;
+    }
+
+    .author-name::before {
+        font-family: "Material Icons";
+        content: "\e931";
+    }
+    
+    .publication-date-label {
+        font-size: 80%;
+        color: #6c757d;
+    }
+}

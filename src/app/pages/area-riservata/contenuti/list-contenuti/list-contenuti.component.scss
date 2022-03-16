@@ -1,0 +1,58 @@
+.contenuti-wrapper{
+    mat-card {
+        padding: 0;
+    }
+
+    mat-card-header { 
+        height: 57px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: left;
+        background-color: #0065cb;
+        border-radius: 4px 4px 0 0;
+        color: #fff;
+
+        mat-icon {
+            padding-left: 1rem;
+        }
+
+        mat-card-title {
+            font-weight: bold;
+            margin-left: 0 !important;
+        }
+
+        div.mat-card-header-text {
+            margin: 0 !important;
+        }
+    }
+
+    th.mat-header-cell {
+        text-align: center !important;
+    }
+
+    .mat-column-titolo {
+        word-wrap: break-word !important;
+        white-space: unset !important;
+        flex: 0 0 40% !important;
+        width: 40% !important;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        
+        word-break: break-word;
+        
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+    }
+
+    .lista-contenuti-container{
+        padding: 1rem;
+    }
+
+    .action-name {
+        padding-left: 5px;
+        display: inline-block !important;
+    }
+}
+

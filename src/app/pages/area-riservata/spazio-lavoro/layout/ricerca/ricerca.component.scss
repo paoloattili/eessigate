@@ -1,0 +1,46 @@
+#search-form {
+  margin: 1rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+
+  .mat-form-field-wrapper {
+    margin: 0 0 0 0 !important;
+  }
+
+  .radio-group {
+    margin-top: 0.7rem;
+    margin-bottom: 1.35rem;
+    mat-radio-group {
+      mat-radio-button {
+        margin: 0 10px 0 10px;
+      }
+    }
+  }
+
+  .checkbox {
+    mat-checkbox {
+      margin-bottom: 1.35rem;
+    }
+  }
+
+}
+
+  .container-actions {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+  }
+
+  #search-button, #refresh-button {
+    margin: 0 5px 0 5px;
+    display: inline-block;
+    background-color: #0065ca;
+    width: 100px;
+  }
+
+#refresh-button {
+  background-color: #009246;
+}

@@ -1,0 +1,42 @@
+<div class="dual-listbox-container" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="1rem" >
+    
+    <div fxFlex.gt-sm="50">
+        <h4 class="title-dual-list-box">Disponibili</h4>
+        <small style="margin-bottom: .1rem;">Sto mostrando {{ source.length }} elementi</small>
+        <button type="button" mat-raised-button class="button-primary btn-dual-list-box" (click)="sendAll()" [disabled]="source.length === 0 || !dateSettate">Aggiungi</button>
+        <mat-form-field class="box-field-dual-list-box">
+            <mat-label>Filtra</mat-label>
+            <input matInput (keyup)="applyFilterLeft($event)" placeholder="Inserisci testo" #input>
+        </mat-form-field>
+        <mat-card class="mat-elevation-z4 box-dual-listbox">
+            <div class="list-elements">
+                <p class="p-options" *ngFor="let item of dualListboxLeftElements" (click)="pushRight(item)" [ngStyle]="{'pointer-events': dateSettate? 'auto' : 'none'}">
+                    {{ item?.value }}
+                </p>
+            </div>
+        </mat-card>
+    </div>
+
+    <div fxFlex.gt-sm="50" >
+        <h4 class="title-dual-list-box">Assegnati</h4>
+        <small style="margin-bottom: .1rem;">Sto mostrando {{ selected.length }} elementi</small>
+        <button type="button" mat-raised-button class="button-primary btn-dual-list-box" (click)="removeAll()" [disabled]="selected.length === 0 || !dateSettate">Rimuovi</button>
+        <mat-form-field class="box-field-dual-list-box">
+            <mat-label>Filtra</mat-label>
+            <input matInput (keyup)="applyFilterRight($event)" placeholder="Inserisci testo" #input>
+        </mat-form-field>
+        <mat-card class="mat-elevation-z4 box-dual-listbox" formControlName="selezionate">
+            <div class="list-elements">
+                <p class="p-options" *ngFor="let item of dualListboxRightElements" (click)="pushLeft(item)">
+                    {{ item?.value }}
+                </p>
+            </div>
+        </mat-card>
+    </div>
+</div>
+<ng-container
+    *ngIf="!dateSettate">
+    <mat-error *ngIf="!dateSettate">
+        Seleziona un range di date corretto.
+    </mat-error>
+</ng-container>

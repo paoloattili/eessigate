@@ -1,0 +1,84 @@
+.dialog-position {
+  mat-dialog-container {
+    position: relative;
+  }
+}
+
+.mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
+
+/**
+File field
+ */
+
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
+.fileForm {
+  button[color="primary"] {
+    background-color: #0065cb;
+    height: 50px;
+  }
+
+  button.btn-error {
+    height: 50px;
+  }
+}
+
+mat-form-field.form-field-file {
+  margin: -0.25em 10px -0.25em 10px !important;
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+#uploadAttachment {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  position: absolute;
+}
+
+.container-info-items.richiesta-dettaglio {
+
+  mat-divider{
+    margin: 10px 0;
+  }
+
+  .item{
+    .item-name {
+      font-weight: 700;
+    }
+    .item-value {
+      text-align: center;
+    }
+  }
+}
+
+.container-content.richiesta-dettaglio {
+  margin-top: 0 !important;
+  padding: 20px !important;
+}
+
+mat-stepper.stepper-richiesta-dettaglio {
+  .mat-horizontal-content-container{
+    padding: 0 0 0 0!important;
+  }
+}
+
+.main-container-ticket {
+  padding: 0;
+}
+
+.main-container-ticket.wrapper.richiesta-dettaglio {
+  max-width: 1400px;
+  margin: 0 auto !important;
+  > * {
+    margin-top: 0;
+  }
+}

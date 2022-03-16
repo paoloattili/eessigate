@@ -1,0 +1,150 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="page-container" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="2rem">
+
+  <div class="container-news" fxFlex.gt-sm="70" fxFlex>
+    <ng-container *ngIf="ultimeNews; else nessunaNews">
+      <mat-tab-group>
+        <div class="sezione-news" *ngFor="let n of ultimeNews; let i=index">
+          <ng-container *ngIf="n.descTipo !== 'Events'">
+            <mat-tab>
+               <ng-template mat-tab-label>
+                <h3>
+                  <span> {{ n.descTipo }}</span>
+                  <!-- <br>
+                  <small *ngIf="n.sottoSezione">{{ n.sottoSezione }}</small> -->
+                </h3>
+              </ng-template>
+              
+              <div class="news-container" fxLayout="column">
+                <ng-container *ngIf="n.descTipo !== 'Events' && n.listaContenutiHome; else nessunContenuto">
+                  <mat-card *ngFor="let c of n.listaContenutiHome; let i=index" [ngStyle]="{'border-left': 'thick solid ' + n.color }" class="card-news mat-elevation-z4" (click)="openModalPreview(c.token)">
+                      <mat-card-content>
+                            <div class="title-container" fxLayout="row">
+                                <mat-icon>newspaper</mat-icon>
+                                <span class="news-title" [matTooltip]="c.titolo">{{ c.titolo }}</span>
+                            </div>
+                            <div *ngIf="c.sottotitolo" class="subtitle-container" fxLayout="row">
+                                <small [matTooltip]="c.sottotitolo">{{ c.sottotitolo }}</small>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <ng-scrollbar>
+                              <div class="card-mews-container">
+                                <div fxLayout="row wrap">
+                                    <p class="card-news-sommario"> {{ c.sommario }} </p>
+                                </div>
+                            </div>
+                            <div fxLayout.gt-xs="row" fxLayout="column">
+                                <div class="author" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                    <span class="author-name"> {{ c.nominativo }} </span>
+                                </div>
+                                <div class="data-pubblicazione" fxLayout.gt-xs="row" fxLayout="column" fxFlex.gt-xs="50" fxFlex="100">
+                                    <span class="publication-date-label"> {{ c.dataModifica | date: 'dd-MM-yyyy HH:mm' }} </span>
+                                </div>
+                            </div>
+                            </ng-scrollbar>
+                      </mat-card-content>
+                  </mat-card> 
+                  <div class="mostra-altre" fxLayout="row" fxLayoutAlign="start end">
+                    <div (click)="vaiANews()"><span class="label-tutte-news">Vedi tutte le news...</span></div>
+                  </div>
+                </ng-container>
+                <ng-template #nessunContenuto>
+                  <h4 class="label-news-assenti">Nessuna news presente.</h4>
+                </ng-template>
+              </div>
+            </mat-tab>
+            
+          </ng-container>
+        </div>
+      </mat-tab-group>
+    </ng-container>
+    <ng-template #nessunaNews>
+      <h3>Nessuna tipologia di news.</h3>
+    </ng-template>
+  </div>
+
+  <div class="docs-container" fxFlex.gt-sm="30" fxFlex>
+      <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <h3>Ultimi Documenti</h3>
+          </ng-template>
+          <div class="documents-container" fxLayout="column">
+            
+            <ng-container *ngIf="ultimiDocumenti; else nessunDocumentoCaricato">
+              <mat-card *ngFor="let d of ultimiDocumenti; let i=index" class="doc-card mat-elevation-z4">
+                <div fxLayout="row" class="tipo-doc">
+                  <mat-icon>description</mat-icon>
+                  <span [matTooltip]="d.tipoDocumento">{{ d.tipoDocumento }}</span>
+                </div>
+                <div fxLayout="column" class="titolo-doc" fxFlexAlign="start center">
+                  <p class="link" (click)="goToDetail(d)" [matTooltip]="d.title">
+                    {{ d.title }}
+                  </p>
+                </div>
+                <div fxLayout="row" class="download-doc">
+                  <button mat-button class="basic-button-primary" (click)="downloadDocumento(d.token, i)">
+                    <mat-icon>cloud_download</mat-icon>&nbsp;
+                    <span>Download</span>
+                  </button>
+                </div>
+                <div fxLayout.lt-sm="column" fxLayout="row" class="footer-doc">
+                  <div class="author" fxLayoutAlign="start end" fxFlex.gt-sm="50" fxFlex>
+                    <span class="author-name">{{ d.author }}</span>
+                  </div>
+                  <div class="publication-date" fxLayoutAlign.gt-xs="end end" fxLayoutAlign="start end" fxFlex.gt-sm="50" fxFlex>
+                      <span class="publication-date-label">{{ d.creationDate | date: 'dd-MM-yyyy HH:mm' }}</span>
+                  </div>
+                </div>
+              </mat-card>
+            </ng-container>
+            <ng-template #nessunDocumentoCaricato>
+              <h4>Nessun documento caricato.</h4>
+            </ng-template>
+
+          </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <h3>Documenti più commentati</h3>
+          </ng-template>
+          <div class="documents-container" fxLayout="column">
+            
+            <ng-container *ngIf="documentiTopCommentati; else nessunDocumentoCommentato">
+              <mat-card *ngFor="let d of documentiTopCommentati; let i=index" class="doc-card mat-elevation-z4">
+                <div fxLayout="row" class="tipo-doc">
+                  <mat-icon>description</mat-icon>
+                  <span>{{ d.tipoDocumento }}</span>
+                </div>
+                <div fxLayout="column" class="titolo-doc">
+                  <p class="link" (click)="goToDetail(d)">
+                    {{ d.title }}
+                  </p>
+                </div>
+                <div fxLayout="row" class="download-doc">
+                  <button mat-button class="basic-button-primary" (click)="downloadAttachment(d.token)">
+                    <mat-icon>cloud_download</mat-icon>&nbsp;
+                    <span>Download</span>
+                  </button>
+                </div>
+                <div fxLayout.lt-sm="column" fxLayout="row" class="footer-doc">
+                  <div class="author" fxLayoutAlign="start end" fxFlex.gt-sm="50" fxFlex>
+                    <span class="author-name">{{ d.author }}</span>
+                  </div>
+                  <div class="publication-date" fxLayoutAlign.gt-xs="end end" fxLayoutAlign="start end" fxFlex.gt-sm="50" fxFlex>
+                      <span class="publication-date-label">{{ d.creationDate | date: 'dd-MM-yyyy HH:mm' }}</span>
+                  </div>
+                </div>
+              </mat-card>
+            </ng-container>
+            <ng-template #nessunDocumentoCommentato>
+              <h4>Nessun documento commentato.</h4>
+            </ng-template>
+
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+  </div>
+
+</div>

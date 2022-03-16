@@ -1,0 +1,42 @@
+.menu-nav-notifications a.a-item mat-icon:hover {
+    color: #cbcbcb;
+}
+
+div.mat-menu-content {
+    padding-bottom: 0.7rem;
+}
+
+.notifiche-container {
+    max-height: 18.5rem;;
+    overflow-y: auto;
+}
+
+.menu-nav-notifications {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 1rem;
+    margin-top: 0.5rem;
+
+    @media(max-width: 1240px) {
+        padding: 0.8rem;
+    }
+}
+.button-notifiche {
+    min-height: 6rem;
+}
+
+.notifica-container {
+    padding: 0;
+    white-space: break-spaces;
+}
+
+.testo-notifica-container {
+    padding-left: 10px;
+    white-space: break-spaces;
+    line-height: normal;
+    margin-top: 0.7rem;
+}
+
+.notifica-ricevuta {
+    text-align: end;
+}

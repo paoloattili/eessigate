@@ -1,0 +1,121 @@
+.page-container {
+    padding: 20px 0;
+    min-height: 400px;
+    max-width: 1024px;
+    margin: auto;
+}
+
+.tabella-container {
+    padding: 20px 0;
+    margin: auto;
+}
+
+/**
+  Generic Card Tabella
+   */
+mat-card.generic-tabella-card {
+    padding: 0 0 0 0 !important;
+
+    mat-card-header.generic-card-header {
+        height: 57px;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        background-color: #0065cb;
+        border-radius: 4px 4px 0 0;
+        color: #fff;
+    }
+
+    mat-card-header.generic-card-header > * {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: left;
+        margin: 0 16px 0 16px !important;
+    }
+
+    mat-card-header.generic-card-header > mat-icon {
+        width: auto !important;
+    }
+
+    mat-card-header.generic-card-header mat-card-title {
+        margin: 0 -16px !important;
+        font-size: 17px !important;
+        font-weight: bold !important;
+    }
+
+    .tabella-content {
+        width: 90% !important;
+        margin: 10px auto 0 auto;
+
+        mat-card-content.genic-card-content {
+            margin-bottom: 0 !important;
+        }
+
+        mat-divider {
+            position: relative;
+        }
+        mat-card-actions.genic-card-content-tabella {
+            text-align: center !important;
+        }
+
+        div.table{
+            overflow-x: auto;
+        }
+    }
+
+}
+
+/**
+  Generic Card
+   */
+mat-card.generic-card {
+    padding: 0 0 0 0 !important;
+
+    mat-card-header.generic-card-header {
+        height: 57px;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        background-color: #0065cb;
+        border-radius: 4px 4px 0 0;
+        color: #fff;
+    }
+
+    mat-card-header.generic-card-header > * {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: left;
+        margin: 0 16px 0 16px !important;
+    }
+
+    mat-card-header.generic-card-header > mat-icon {
+        width: auto !important;
+    }
+
+    mat-card-header.generic-card-header mat-card-title {
+        margin: 0 -16px !important;
+        font-size: 17px !important;
+        font-weight: bold !important;
+    }
+
+    .newsletter-content {
+        width: 90% !important;
+        margin: 10px auto 0 auto;
+        padding: 10px 20px 10px 20px;
+
+        mat-card-content.genic-card-content {
+            margin-bottom: 0 !important;
+        }
+
+        mat-divider {
+            position: relative;
+        }
+        mat-card-actions.genic-card-content {
+            margin-top: 10px;
+            margin-bottom: 0 !important;
+            margin-left: 0 !important;
+        }
+    }
+}

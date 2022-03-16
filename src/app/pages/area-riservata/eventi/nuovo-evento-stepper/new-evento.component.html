@@ -1,0 +1,558 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="main-container"
+     fxLayout="row" fxLayout.gt-lg="row" fxLayout.lt-lg="column"
+     fxLayoutAlign="center center"
+     fxLayoutGap="1rem" fxLayoutGap.lt-lg="1rem">
+
+  <mat-stepper #matStepper [linear]="true" fxFlex="70" orientation="horizontal" labelPosition="end">
+
+    <!-- STEP 1  -->
+    <mat-step [stepControl]="infoForm">
+      <ng-template matStepLabel>Informazioni</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+
+        <div class="page-container"
+             fxLayout="column" fxLayout.lt-md="column"
+             fxLayoutAlign="space-between center"
+             fxLayoutGap="1rem">
+
+
+          <form id="info-form" [formGroup]="infoForm" fxLayout="column">
+
+            <!-- Titolo -->
+            <mat-form-field appearance="outline">
+              <mat-label>Titolo*</mat-label>
+              <input formControlName="titolo" matInput>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="infoForm.get(['titolo'])!.invalid && (infoForm.get(['titolo'])!.dirty || infoForm.get(['titolo'])!.touched)">
+
+                <mat-error *ngIf="infoForm.get(['titolo'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+
+                <mat-error *ngIf="infoForm.get(['titolo'])!.errors.pattern">
+                  Questo campo contiene caratteri non ammessi.
+                </mat-error>
+
+              </ng-container>
+            </mat-form-field>
+
+            <!-- Tipo di evento -->
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo di evento*</mat-label>
+              <mat-select formControlName="tipoEvento">
+                <mat-option *ngFor="let option of tipoEventoSelect" [value]="option">
+                  {{option.name}}
+                </mat-option>
+              </mat-select>
+
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="infoForm.get(['tipoEvento'])!.invalid && (infoForm.get(['tipoEvento'])!.dirty || infoForm.get(['tipoEvento'])!.touched)">
+                <mat-error *ngIf="infoForm.get(['tipoEvento'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+              </ng-container>
+            </mat-form-field>
+
+
+            <mat-tab-group class="mat-class-evento-stepper">
+              <mat-tab label="Informazioni">
+                <!-- Informazioni evento -->
+                <mat-form-field  style="margin-top:15px;" class="mat-field-evento-stepper" appearance="outline">
+                  <textarea formControlName="informazioniEvento" matInput rows="10"></textarea>
+
+                  <!-- ERROR MSG -->
+                  <ng-container
+                    *ngIf="infoForm.get(['informazioniEvento'])!.invalid && (infoForm.get(['informazioniEvento'])!.dirty || infoForm.get(['informazioniEvento'])!.touched)">
+                    <mat-error *ngIf="infoForm.get(['informazioniEvento'])!.errors.pattern">
+                      Questo campo contiene caratteri non ammessi.
+                    </mat-error>
+                  </ng-container>
+                </mat-form-field>
+
+              </mat-tab>
+              <mat-tab [disabled]="disableDocumenti">
+                <ng-template mat-tab-label>
+                  <label
+                    matTooltip="Si deve scegliere un tipo di evento">Documenti {{category?.name ? '(' + category.name + ')' : ''}}</label>
+                </ng-template>
+                <app-tree [filterEnable]="false" [categories]="categorie" (clickNode)="category = $event"></app-tree>
+              </mat-tab>
+            </mat-tab-group>
+
+
+          </form>
+
+          <!-- btn container -->
+          <div class="btn-container"
+               fxLayout="row" fxLayoutAlign="end center"
+          >
+            <button class="btn-basic" mat-button matStepperNext [disabled]="infoForm.invalid">
+              Seguente
+              <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </mat-step>
+
+    <!-- STEP 2 - DOVE -->
+    <mat-step>
+      <ng-template matStepLabel>Dove</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container"
+             fxLayout="column" fxLayout.lt-md="column"
+             fxLayoutAlign="space-between center"
+             fxLayoutGap="1rem">
+          <form id="luogo-form" fxLayout="column">
+            <!-- Luogo select -->
+            <mat-form-field appearance="outline">
+              <mat-label>Luogo*</mat-label>
+              <mat-select [value]="0" (selectionChange)="doveSelected($event)">
+                <mat-option [value]="0">Nesun luogo selezionato.</mat-option>
+                <mat-option *ngFor="let option of luogoSelect" [value]="option.token">
+                  {{option.name}}
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+
+            <!-- se luogo è vuoto è possibile aggiugnere un luogo custom -->
+
+            <mat-accordion #matAccordionPanel="matAccordion" class="accordion">
+              <mat-expansion-panel [disabled]="doveSelect !== 0">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Inserisci un nuovo luogo.
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-panel-description>
+                  <ng-container *ngTemplateOutlet="nuovoLuogo"></ng-container>
+                </mat-panel-description>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+
+          </form>
+
+          <!-- btn container -->
+          <div class="btn-container"
+               fxLayout="row" fxLayoutAlign="space-between center"
+          >
+            <!-- back -->
+            <button class="btn-back" mat-button matStepperPrevious>
+              <mat-icon>arrow_back_ios</mat-icon>
+              Torna indietro
+            </button>
+
+            <!-- next -->
+            <ng-container *ngIf="doveSelect !== 0;else btnLuogoForm">
+              <button class="btn-basic" mat-button matStepperNext>
+                Seguente
+                <mat-icon>arrow_forward_ios</mat-icon>
+              </button>
+            </ng-container>
+
+            <ng-template #btnLuogoForm>
+              <button class="btn-basic" mat-button matStepperNext [disabled]="luogoForm.invalid">
+                Seguente
+                <mat-icon>arrow_forward_ios</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+
+        </div>
+      </div>
+
+    </mat-step>
+
+
+    <!-- STEP 3 - QUANDO -->
+    <mat-step [stepControl]="quandoForm">
+      <ng-template matStepLabel>Quando</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container"
+             fxLayout="column" fxLayout.lt-md="column"
+             fxLayoutAlign="space-between center"
+             fxLayoutGap="1rem">
+
+          <form id="quando-form" [formGroup]="quandoForm"
+                fxLayout="column"
+                fxLayoutAlign="center start"
+          >
+
+
+            <!-- Intera giornata -->
+            <div class="checkbox" fxLayout="column" style="margin-bottom: 20px;">
+              <mat-checkbox
+                [matTooltip]="'Devi scegliere una data inizio e una data fine.'"
+                [disabled]="!(quandoForm.get(['dataInizio']).value !== '' && quandoForm.get(['dataFine']).value !== '' )"
+                aria-labelledby="intera-giornata-label" formControlName="interaGiornata">Intera giornata
+              </mat-checkbox>
+            </div>
+
+
+            <!-- Contenitore data inizio - fine -->
+            <div
+              fxLayout="row"
+              fxLayoutAlign="center start"
+              fxLayoutGap="1rem"
+            >
+              <!-- data inizio -->
+              <mat-form-field appearance="fill" class="input-date">
+                <mat-label>Data inizio*</mat-label>
+                <input matInput formControlName="dataInizio"
+                       type="datetime-local" [min]="oggi| date:'yyyy-MM-ddTHH:mm'"
+                       placeholder="Data inizio">
+
+                <!-- ERROR MSG -->
+                <ng-container
+                  *ngIf="quandoForm.get(['dataInizio'])!.invalid && (quandoForm.get(['dataInizio'])!.dirty || quandoForm.get(['dataInizio'])!.touched)">
+                  <mat-error *ngIf="quandoForm.get(['dataInizio'])!.errors.required">
+                    Questo campo è obbligatorio!
+                  </mat-error>
+                </ng-container>
+              </mat-form-field>
+              <!-- data fine -->
+              <mat-form-field appearance="fill" class="input-date">
+                <mat-label>Data fine*</mat-label>
+                <input matInput formControlName="dataFine"
+                       type="datetime-local" [min]="quandoForm.get(['dataInizio']).value| date:'yyyy-MM-ddTHH:mm'"
+                       placeholder="Data Fine">
+                <!-- ERROR MSG -->
+                <ng-container
+                  *ngIf="quandoForm.get(['dataFine'])!.invalid && (quandoForm.get(['dataFine'])!.dirty || quandoForm.get(['dataFine'])!.touched)">
+                  <mat-error *ngIf="quandoForm.get(['dataFine'])!.errors.required">
+                    Questo campo è obbligatorio!
+                  </mat-error>
+                </ng-container>
+              </mat-form-field>
+
+            </div>
+
+            <mat-error *ngIf="quandoForm.errors?.dateRange" style="margin-bottom: 20px;">
+              Il range non è valido! verifica l'inserimento della data inizio e fine.
+            </mat-error>
+
+
+
+            <!-- Chiusura iscrizioni -->
+            <mat-form-field appearance="fill" class="input-date">
+              <mat-label>Chiusura iscrizione*</mat-label>
+              <input matInput formControlName="chiusuraIscrizione"
+                     type="datetime-local"
+                     [min]="oggi | date: 'yyyy-MM-ddTHH:mm'"
+                     [max]="quandoForm.get(['dataInizio']).value| date:'yyyy-MM-ddTHH:mm'"
+                     placeholder="Data Fine">
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="quandoForm.get(['chiusuraIscrizione'])!.invalid && (quandoForm.get(['chiusuraIscrizione'])!.dirty || quandoForm.get(['chiusuraIscrizione'])!.touched)">
+                <mat-error *ngIf="quandoForm.get(['chiusuraIscrizione'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+              </ng-container>
+            </mat-form-field>
+            <mat-error *ngIf="quandoForm.errors?.chiusuraValidator">
+              La data di chiusura deve essere precendete a quella di inizo e successiva  alla data attuale {{ oggi | date:'dd-MM-yyyy HH:mm' }}.
+            </mat-error>
+
+          </form>
+
+          <!-- btn container -->
+          <div class="btn-container"
+               fxLayout="row" fxLayoutAlign="space-between center"
+          >
+            <button class="btn-back" mat-button matStepperPrevious>
+              <mat-icon>arrow_back_ios</mat-icon>
+              Torna indietro
+            </button>
+            <button class="btn-basic" mat-button matStepperNext [disabled]="quandoForm.invalid">
+              Seguente
+              <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </mat-step>
+
+    <!-- STEP 4 - DESTINATARI -->
+    <mat-step [stepControl]="destinatariForm">
+      <ng-template matStepLabel>Destinatari</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container"
+             fxLayout="column" fxLayout.lt-md="column"
+             fxLayoutAlign="space-between center"
+             fxLayoutGap="1rem">
+          <form id="destinatari-form" [formGroup]="destinatariForm" fxLayout="column">
+
+<!--            <div class="checkbox" fxLayout="column" style="margin-bottom: 20px;">-->
+<!--              <mat-checkbox aria-labelledby="richiedi-pubblicazione-label" formControlName="tuttiGliUtenti">Tutti gli utenti-->
+<!--              </mat-checkbox>-->
+<!--            </div>-->
+
+            <!-- destinatari -->
+            <mat-form-field appearance="outline">
+              <mat-label>Destinatari*</mat-label>
+              <mat-select formControlName="destinatari">
+                <mat-option>Nessun destinatario selezionato</mat-option>
+                <mat-option *ngFor="let option of destinatariSelect" [value]="option.token">
+                  {{option.name}}
+                </mat-option>
+              </mat-select>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="destinatariForm.get(['destinatari'])!.invalid && (destinatariForm.get(['destinatari'])!.dirty || destinatariForm.get(['destinatari'])!.touched)">
+                <mat-error *ngIf="destinatariForm.get(['destinatari'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+              </ng-container>
+            </mat-form-field>
+
+            <!-- gruppi destinatari -->
+            <input-chips-multi-select
+              [label]="'Destinatari gruppi*'"
+              [items]="gruppiTipologiche"
+              (selectedItems)="destinatariGruppi = $event">
+            </input-chips-multi-select>
+
+          </form>
+
+
+          <!-- btn container -->
+          <div class="btn-container"
+               fxLayout="row" fxLayoutAlign="space-between center"
+          >
+            <button class="btn-back" mat-button matStepperPrevious>
+              <mat-icon>arrow_back_ios</mat-icon>
+              Torna indietro
+            </button>
+<!--            <ng-container *ngIf="destinatariForm.get(['tuttiGliUtenti']).value;else noTuttiGliUtenti">-->
+<!--              <button class="btn-basic" mat-button (click)="salva()">-->
+<!--                Salva-->
+<!--                <mat-icon>arrow_forward_ios</mat-icon>-->
+<!--              </button>-->
+<!--            </ng-container>-->
+<!--            <ng-template #noTuttiGliUtenti>-->
+<!--              <button class="btn-basic" mat-button-->
+<!--                      [disabled]="destinatariForm.get(['destinatariGruppi']).value?.length === 0 " (click)="salva()">-->
+<!--                Salva-->
+<!--                <mat-icon>arrow_forward_ios</mat-icon>-->
+<!--              </button>-->
+<!--            </ng-template>-->
+                <button class="btn-basic" mat-button
+                  [disabled]="destinatariForm.get(['destinatariGruppi']).value?.length === 0  && !destinatariForm.get(['destinatari']).value" (click)="salva()">
+                  Salva
+                  <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+          </div>
+
+        </div>
+
+      </div>
+    </mat-step>
+
+    <!-- STEP 5 - EVENTO SALVATO -->
+    <mat-step>
+      <ng-template matStepLabel>Evento salvato!</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container"
+             fxLayout="column" fxLayout.lt-md="column"
+             fxLayoutAlign="space-between center"
+             fxLayoutGap="1rem">
+
+
+          <div class="container-content">
+
+            <div class="container-complete" fxLayout="column" fxLayoutAlign="center center">
+              <div class="container-icon">
+                <mat-icon>check_circle</mat-icon>
+              </div>
+              <div class="testo-complete">
+                Hai creato un nuovo evento.<br>
+                Puoi entrare al dettaglio dell'evento
+                <a [routerLink]="['../dettaglio']" [queryParams]="{t: tokenEventoSalvato}">qui</a>
+                oppure puoi vedere tutti gli eventi sul
+                <a [routerLink]="['../calendario']">calendario</a>.
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </mat-step>
+
+
+  </mat-stepper>
+
+</div>
+
+
+<!-- form dettaglio luogo -->
+<ng-template #nuovoLuogo>
+  <form [formGroup]="luogoForm" fxLayout="column" fxFlex="100">
+
+    <!-- Nome del luogo -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nome del luogo*</mat-label>
+      <input formControlName="nomeLuogo" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['nomeLuogo'])!.invalid && (luogoForm.get(['nomeLuogo'])!.dirty || luogoForm.get(['nomeLuogo'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['nomeLuogo'])?.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['nomeLuogo'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- Indirizzo -->
+    <mat-form-field appearance="outline">
+      <mat-label>Indirizzo*</mat-label>
+      <input formControlName="indirizzo" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['indirizzo'])!.invalid && (luogoForm.get(['indirizzo'])!.dirty || luogoForm.get(['indirizzo'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['indirizzo'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['indirizzo'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- Numero -->
+    <mat-form-field appearance="outline">
+      <mat-label>Numero*</mat-label>
+      <input formControlName="numero" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['numero'])!.invalid && (luogoForm.get(['numero'])!.dirty || luogoForm.get(['numero'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['numero'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['numero'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- Citta -->
+    <mat-form-field appearance="outline">
+      <mat-label>Città*</mat-label>
+      <input formControlName="citta" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['citta'])!.invalid && (luogoForm.get(['citta'])!.dirty || luogoForm.get(['citta'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['citta'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['citta'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- Provincia -->
+    <mat-form-field appearance="outline">
+      <mat-label>Provincia*</mat-label>
+      <input formControlName="provincia" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['provincia'])!.invalid && (luogoForm.get(['provincia'])!.dirty || luogoForm.get(['provincia'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['provincia'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['provincia'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- CAP -->
+    <mat-form-field appearance="outline">
+      <mat-label>CAP*</mat-label>
+      <input formControlName="cap" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['cap'])!.invalid && (luogoForm.get(['cap'])!.dirty || luogoForm.get(['cap'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['cap'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['cap'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['cap'])!.errors?.maxlength">
+          Questo campo ha superato la dimensione massima di caratteri.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+
+    <!-- Paese -->
+    <mat-form-field appearance="outline">
+      <mat-label>Paese*</mat-label>
+      <input formControlName="paese" matInput>
+
+      <!-- ERROR MSG -->
+      <ng-container
+        *ngIf="luogoForm.get(['paese'])!.invalid && (luogoForm.get(['paese'])!.dirty || luogoForm.get(['paese'])!.touched)">
+
+        <mat-error *ngIf="luogoForm.get(['paese'])!.errors.required">
+          Questo campo è obbligatorio!
+        </mat-error>
+
+        <mat-error *ngIf="luogoForm.get(['paese'])!.errors.pattern">
+          Questo campo contiene caratteri non ammessi.
+        </mat-error>
+
+      </ng-container>
+    </mat-form-field>
+  </form>
+
+</ng-template>
+

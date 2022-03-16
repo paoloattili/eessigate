@@ -1,0 +1,597 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="page-container">
+
+    <mat-card class="generic-card mat-elevation-z8" fxLayout="column">
+        <mat-card-header class="generic-card-header">
+            <mat-icon mat-card-avatar>edit_note</mat-icon>
+            <mat-card-title>Crea Contenuto</mat-card-title>
+        </mat-card-header>
+
+        <div class="container-content" fxLayout="column">
+            <mat-card-content class="generic-card-content">
+                <form id="contenuto-form" [formGroup]="contenutoForm" fxLayout="column" (ngSubmit)="save()">
+
+                    <div class="container-primo-blocco" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="1rem">
+
+                        <div class="container-icon" fxFlex.gt-sm="30" fxLayoutAlign="center center">
+                            <mat-icon class="icon-form">newspaper</mat-icon>
+                        </div>
+
+                        <div class="container-form" fxFlex.gt-sm="70">
+
+                            <div class="input-container" fxLayout="column">
+
+                                <!-- TIPO CONTENUTO SELECT-->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Tipo Contenuto*</mat-label>
+                                    <mat-select formControlName="tokenIdTipoContent">
+                                        <mat-option [value]="-1"></mat-option>
+                                        <mat-option *ngFor="let option of listaTipiContenuto" [value]="option">
+                                            {{option.nome}}
+                                        </mat-option>
+                                    </mat-select>
+
+                                    <!-- ERROR MSG -->
+                                    <ng-container
+                                        *ngIf="contenutoForm.get(['tokenIdTipoContent'])!.invalid && (contenutoForm.get(['tokenIdTipoContent'])!.dirty || contenutoForm.get(['tokenIdTipoContent'])!.touched)">
+                                        <mat-error *ngIf="contenutoForm.get(['tokenIdTipoContent'])!.errors.required">
+                                            Questo campo è obbligatorio!
+                                        </mat-error>
+                                    </ng-container>
+                                </mat-form-field>
+
+                                <!-- TITOLO -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Titolo*</mat-label>
+                                    <input formControlName="titolo" matInput>
+
+                                    <!-- ERROR MSG -->
+                                    <ng-container
+                                        *ngIf="contenutoForm.get(['titolo'])!.invalid && (contenutoForm.get(['titolo'])!.dirty || contenutoForm.get(['titolo'])!.touched)">
+
+                                        <mat-error *ngIf="contenutoForm.get(['titolo'])!.errors.required">
+                                            Questo campo è obbligatorio!
+                                        </mat-error>
+
+                                        <mat-error *ngIf="contenutoForm.get(['titolo'])!.errors.pattern">
+                                            Questo campo contiene caratteri non ammessi.
+                                        </mat-error>
+
+                                    </ng-container>
+
+                                </mat-form-field>
+
+                                <!-- SOTTOTITOLO -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Sottotitolo</mat-label>
+                                    <input formControlName="sottotitolo" matInput>
+
+                                    <!-- ERROR MSG -->
+                                    <ng-container
+                                        *ngIf="contenutoForm.get(['sottotitolo'])!.invalid && (contenutoForm.get(['sottotitolo'])!.dirty || contenutoForm.get(['sottotitolo'])!.touched)">
+
+                                        <mat-error *ngIf="contenutoForm.get(['sottotitolo'])!.errors.required">
+                                            Questo campo è obbligatorio!
+                                        </mat-error>
+
+                                        <mat-error *ngIf="contenutoForm.get(['sottotitolo'])!.errors.pattern">
+                                            Questo campo contiene caratteri non ammessi.
+                                        </mat-error>
+
+                                    </ng-container>
+
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SOMMARIO -->
+                    <div class="sommario" fxLayout="column">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Sommario*</mat-label>
+                            <textarea formControlName="sommario" matInput rows="5"></textarea>
+
+                            <!-- ERROR MSG -->
+                            <ng-container
+                                *ngIf="contenutoForm.get(['sommario'])!.invalid && (contenutoForm.get(['sommario'])!.dirty || contenutoForm.get(['sommario'])!.touched)">
+
+                                <mat-error *ngIf="contenutoForm.get(['sommario'])!.errors.required">
+                                    Questo campo è obbligatorio!
+                                </mat-error>
+
+                                <mat-error *ngIf="contenutoForm.get(['sommario'])!.errors.pattern">
+                                    Questo campo contiene caratteri non ammessi.
+                                </mat-error>
+                            </ng-container>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- BODY DA FARE -->
+                    <div class="editor" fxLayout="column">
+                        <div class="label">
+                            <mat-icon class="icon">article</mat-icon>
+                            <mat-label>Corpo*</mat-label>
+                        </div>
+
+                        <div class="editor-box">
+                            <editor apiKey="057r6qeck8heyi2onjyyw08ldn1158zhfxk7aqtjqju5m6gj" formControlName="body"
+                                [init]="
+                                {
+                                    menubar: 'edit format table',
+                                    plugins: [
+                                        'advlist autolink lists link image charmap print',
+                                        'preview anchor searchreplace visualblocks code',
+                                        'fullscreen insertdatetime media table paste',
+                                        'help wordcount'
+                                    ],
+                                    toolbar:
+                                    'undo redo | formatselect | bold italic | \
+                                    alignleft aligncenter alignright alignjustify | \
+                                    bullist numlist outdent indent'
+                                }
+                            "></editor>
+                            <!-- ERROR MSG -->
+                            <ng-container
+                                *ngIf="contenutoForm.get(['body'])!.invalid && (contenutoForm.get(['body'])!.dirty || contenutoForm.get(['body'])!.touched)">
+
+                                <mat-error *ngIf="contenutoForm.get(['body'])!.errors.required">
+                                    Questo campo è obbligatorio!
+                                </mat-error>
+
+                                <mat-error *ngIf="contenutoForm.get(['body'])!.errors['isNotValid']">
+                                    Questo campo contiene caratteri non ammessi.
+                                </mat-error>
+                            </ng-container>
+                        </div>
+
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <!-- IMMAGINE -->
+                    <div class="container-img" fxLayout="column">
+                        <div class="label">
+                            <mat-icon class="icon">image</mat-icon>
+                            <mat-label>Immagine</mat-label>
+                        </div>
+
+                        <div class="fileForm" fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="space-between none"
+                            fxLayoutGap="10px">
+                            <!-- button -->
+                            <button fxFlex="20" mat-flat-button color="primary">
+                                Scegli un'immagine
+                                <input id="uploadImg" #imgInput type="file"
+                                    (change)="selectedImg($event.target.files)" name="uploadImg" />
+                            </button>
+
+                            <!-- input display name -->
+                            <mat-form-field class="form-field-file" fxFlex formGroupName="img" appearance="outline"
+                                matTooltip="E' possibile trascinare un file su questo campo!" dndFile
+                                (fileDropped)="selectedImg($event)">
+
+                                <mat-label>Immagine</mat-label>
+                                <input formControlName="name" matInput readonly name="name">
+
+                                <!-- FILE - ERRORS -->
+                                <ng-container *ngIf="img.get(['fileSource'])?.errors">
+                                    <ng-container *ngIf="img.get(['fileSource']).errors['invalidSize'] !== null">
+                                        <mat-error *ngIf="img.get(['fileSource']).errors['invalidSize']">
+                                            Il file {{img.get(['name']).value}} supera i 20Mbyte. Devi scegliere un
+                                            altro
+                                            file.
+                                        </mat-error>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="img.get(['fileSource']).errors['invalidType'] !== null">
+                                        <mat-error *ngIf="img.get(['fileSource']).errors['invalidType']">
+                                            Questo tipo di file {{img.get(['name']).value}} non può essere caricato.
+                                        </mat-error>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="img.get(['fileSource']).errors['invalidName'] !== null">
+                                        <mat-error *ngIf="img.get(['fileSource']).errors['invalidName']">
+                                            Il file {{img.get(['name']).value}} deve essere rinominato.
+                                        </mat-error>
+                                    </ng-container>
+
+                                </ng-container>
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <!-- ALLEGATI -->
+                    <div class="container-img" fxLayout="column" formArrayName="attachments">
+                        <div class="label">
+                            <mat-icon class="icon allegati">attach_file</mat-icon>
+                            <mat-label>Allegati</mat-label>
+                        </div>
+
+                        <div class="container-file-input" *ngFor="let item of attachments.controls; let i=index;">
+                            <div class="fileForm" [formGroupName]="i" fxLayout="row" fxLayout.lt-lg="column"
+                                fxLayoutAlign="space-between none" fxLayoutGap="10px">
+                                <!-- button -->
+                                <button fxFlex="20" mat-flat-button color="primary">
+                                    Scegli un file
+                                    <input id="uploadAttachment" #attachmentsInput type="file"
+                                        (change)="selectedFile($event.target.files,i)" name="uploadAttachment" />
+                                </button>
+
+                                <!-- input display name -->
+                                <mat-form-field class="form-field-file" fxFlex
+                                    appearance="outline" matTooltip="E' possibile trascinare un file su questo campo!"
+                                    dndFile (fileDropped)="selectedFile($event)">
+
+                                    <mat-label>File</mat-label>
+                                    <input formControlName="name" matInput readonly name="name">
+
+                                    <!-- FILE - ERRORS -->
+                                    <ng-container *ngIf="item.get(['fileSource'])?.errors">
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidSize'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidSize']">
+                                                Il file {{item.get(['name']).value}} supera i 20Mbyte. Devi
+                                                scegliere un
+                                                altro
+                                                file.
+                                            </mat-error>
+                                        </ng-container>
+
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidType'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidType']">
+                                                Questo tipo di file {{item.get(['name']).value}} non può
+                                                essere
+                                                caricato.
+                                            </mat-error>
+                                        </ng-container>
+
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidName'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidName']">
+                                                Il file {{item.get(['name']).value}} deve essere rinominato.
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </ng-container>
+
+                                </mat-form-field>
+
+                                <!-- rimuovi -->
+                                <button mat-flat-button color="primary" *ngIf="i === 0" (click)="pulisciFile(i)" fxFlex="20">
+                                    <mat-icon>restart_alt</mat-icon>
+                                    <span>Pulisci</span>
+                                </button>
+
+                                <button mat-flat-button class="btn-error" *ngIf="i > 0" (click)="rimuoviFile(i)" fxFlex="20">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>Rimuovi</span>
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <!-- GALLERIA -->
+                    <div class="container-img" fxLayout="column" formArrayName="gallery">
+                        <div class="label">
+                            <mat-icon class="icon allegati">collections</mat-icon>
+                            <mat-label>Galleria</mat-label>
+                        </div>
+
+                        <div class="container-file-input" *ngFor="let item of gallery.controls; let i=index;">
+
+                            <div class="fileForm" [formGroupName]="i" fxLayout="row" fxLayout.lt-lg="column"
+                                fxLayoutAlign="space-between none" fxLayoutGap="10px">
+                                <!-- button -->
+                                <button fxFlex="20" mat-flat-button color="primary">
+                                    Scegli un file
+                                    <input id="uploadGallery" #galleryInput type="file"
+                                        (change)="selectedGallery($event.target.files,i)" name="uploadGallery" />
+                                </button>
+
+                                <!-- input display name -->
+                                <mat-form-field class="form-field-file" fxFlex
+                                    appearance="outline" matTooltip="E' possibile trascinare un file su questo campo!"
+                                    dndFile (fileDropped)="selectedGallery($event)">
+
+                                    <mat-label>File</mat-label>
+                                    <input formControlName="name" matInput readonly name="name">
+
+                                    <!-- FILE - ERRORS -->
+                                    <ng-container *ngIf="item.get(['fileSource'])?.errors">
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidSize'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidSize']">
+                                                Il file {{item.get(['name']).value}} supera i 20Mbyte. Devi
+                                                scegliere un
+                                                altro
+                                                file.
+                                            </mat-error>
+                                        </ng-container>
+
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidType'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidType']">
+                                                Questo tipo di file {{item.get(['name']).value}} non può
+                                                essere
+                                                caricato.
+                                            </mat-error>
+                                        </ng-container>
+
+                                        <ng-container
+                                            *ngIf="item.get(['fileSource']).errors['invalidName'] !== null">
+                                            <mat-error *ngIf="item.get(['fileSource']).errors['invalidName']">
+                                                Il file {{item.get(['name']).value}} deve essere rinominato.
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </ng-container>
+
+                                </mat-form-field>
+
+                                <!-- rimuovi -->
+                                <button mat-flat-button color="primary" *ngIf="i === 0" (click)="pulisciGallery(i)" fxFlex="20">
+                                    <mat-icon>restart_alt</mat-icon>
+                                    <span>Pulisci</span>
+                                </button>
+
+                                <button mat-flat-button class="btn-error" *ngIf="i > 0" (click)="rimuoviGallery(i)" fxFlex="20">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>Rimuovi</span>
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <div class="label-sezioni">
+                        <h2>Destinatari*</h2>
+                    </div>
+
+                    <ng-container formGroupName="destinatari">
+
+                        <div class="destinatari-container">
+
+                            <mat-radio-group aria-labelledby="destinatari-label" formControlName="value"
+                                aria-label="Destinatari">
+
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="0">Tutti gli utenti</mat-radio-button>
+                                    </div>
+                                    <div fxFlex.gt-sm="80">
+                                        <div class="empty-field" fxFlex></div>
+                                    </div>
+                                </div>
+
+                                <!-- SELECT UTENTI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="1">Solo gli utenti selezionati</mat-radio-button>
+                                    </div>
+
+                                    <div fxFlex.gt-sm="80">
+                                        <mat-form-field appearance="outline" fxFlex>
+                                            <mat-label>Utenti*</mat-label>
+                                            <mat-chip-list #utentiList aria-label="Utenti*">
+                                                <mat-chip *ngFor="let utente of utenti"
+                                                    (removed)="rimuoviUtente(utente)">
+                                                    {{ utente.nominativo }}
+                                                    <button matChipRemove>
+                                                        <mat-icon>cancel</mat-icon>
+                                                    </button>
+                                                </mat-chip>
+                                                <input #utentiInput [formControl]="utentiInputControl"
+                                                    [matAutocomplete]="autoUtenti" [matChipInputFor]="utentiList"
+                                                    [disabled]="destinatari.get(['value']).value !== '1'">
+                                                <mat-autocomplete #autoUtenti="matAutocomplete"
+                                                    (optionSelected)="selectedUtente($event)">
+                                                    <mat-option *ngFor="let utente of filteredUtenti | async"
+                                                        [value]="utente">
+                                                        <span>{{ utente.nominativo }}</span>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-chip-list>
+
+                                            <!-- ERROR MSG -->
+                                            <ng-container
+                                                *ngIf="(utentiInputControl!.dirty || utentiInputControl!.touched || destinatari.get(['value']).value === '1')">
+                                                <mat-error
+                                                    *ngIf="utentiInputControl!.touched && destinatari.get(['value']).value === '1' && this.utenti.length <= 0">
+                                                    Questo campo è obbligatorio!
+                                                </mat-error>
+                                            </ng-container>
+
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <!-- SELECT GRUPPI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="2">Solo i gruppi selezionati</mat-radio-button>
+                                    </div>
+
+                                    <mat-form-field appearance="outline" fxFlex.gt-sm="80">
+                                        <mat-label>Gruppi*</mat-label>
+                                        <mat-chip-list #gruppiList aria-label="Gruppi*">
+                                            <mat-chip *ngFor="let gruppo of gruppi" (removed)="rimuoviGruppo(gruppo)">
+                                                {{ gruppo.name }}
+                                                <button matChipRemove>
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip>
+                                            <input #gruppiInput [formControl]="gruppiInputControl"
+                                                [matAutocomplete]="autoGruppi" [matChipInputFor]="gruppiList"
+                                                [disabled]="destinatari.get(['value']).value !== '2'">
+                                            <mat-autocomplete #autoGruppi="matAutocomplete"
+                                                (optionSelected)="selectedGruppo($event)">
+                                                <mat-option *ngFor="let gruppo of filteredGruppi | async"
+                                                    [value]="gruppo">
+                                                    <span>{{ gruppo.name }}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="(gruppiInputControl!.dirty || gruppiInputControl!.touched || destinatari.get(['value']).value === '2')">
+                                            <mat-error
+                                                *ngIf="gruppiInputControl!.touched && destinatari.get(['value']).value === '2' && this.gruppi.length <= 0">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                                <!-- SELECT RUOLI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="3">Solo i ruoli selezionati</mat-radio-button>
+                                    </div>
+
+                                    <mat-form-field appearance="outline" fxFlex.gt-sm="80">
+                                        <mat-label>Ruoli*</mat-label>
+                                        <mat-chip-list #ruoliList aria-label="Ruoli*">
+                                            <mat-chip *ngFor="let ruolo of ruoli" (removed)="rimuoviRuolo(ruolo)">
+                                                {{ ruolo.nome }}
+                                                <button matChipRemove>
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip>
+                                            <input #ruoliInput [formControl]="ruoliInputControl"
+                                                [matAutocomplete]="autoRuoli" [matChipInputFor]="ruoliList"
+                                                [disabled]="destinatari.get(['value']).value !== '3'">
+                                            <mat-autocomplete #autoRuoli="matAutocomplete"
+                                                (optionSelected)="selectedRuolo($event)">
+                                                <mat-option *ngFor="let ruolo of filteredRuoli | async" [value]="ruolo">
+                                                    <span>{{ ruolo.nome }}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="(ruoliInputControl!.dirty || ruoliInputControl!.touched || destinatari.get(['value']).value === '3')">
+                                            <mat-error
+                                                *ngIf="ruoliInputControl!.touched && destinatari.get(['value']).value === '3' && this.ruoli.length <= 0">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                            </mat-radio-group>
+
+                        </div>
+                    </ng-container>
+
+                    <!-- RICHIESTA PUBBLICAZIONE -->
+                    <div class="checkbox" fxLayout="column">
+                        <mat-checkbox aria-labelledby="richiedi-pubblicazione-label" formControlName="daPubblicare">Richiedi pubblicazione</mat-checkbox>
+                    </div>
+
+                </form>
+            </mat-card-content>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-actions>
+
+                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem">
+
+                    <!-- ACTION INVIA -->
+                    <ng-container *ngIf="destinatari.get(['value']).value == 0">
+
+                        <button class="button-primary" form="contenuto-form" mat-flat-button
+                            [disabled]="contenutoForm.invalid">
+                            Crea
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 1">
+
+                        <button class="button-primary" form="contenuto-form" mat-flat-button
+                            [disabled]="contenutoForm.invalid || this.utenti.length <= 0">
+                            Crea
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 2">
+
+                        <button class="button-primary" form="contenuto-form" mat-flat-button
+                            [disabled]="contenutoForm.invalid || this.gruppi.length <= 0">
+                            Crea
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 3">
+
+                        <button class="button-primary" form="contenuto-form" mat-flat-button
+                            [disabled]="contenutoForm.invalid || this.ruoli.length <= 0">
+                            Crea
+                        </button>
+
+                    </ng-container>
+
+                </div>
+
+                <!-- ERROR MSG -->
+                <!-- <div fxLayout="column" class="errors-container">
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 1">
+                        <ng-container
+                            *ngIf="(contenutoForm.invalid && (contenutoForm.touched) && contenutoForm.invalid) || this.utenti.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 2">
+                        <ng-container
+                            *ngIf="(contenutoForm.invalid && (contenutoForm.touched) && contenutoForm.invalid) || this.gruppi.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 3">
+                        <ng-container
+                            *ngIf="(contenutoForm.invalid && (contenutoForm.touched) && contenutoForm.invalid) || this.ruoli.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                </div> -->
+
+            </mat-card-actions>
+
+        </div>
+    </mat-card>
+</div>

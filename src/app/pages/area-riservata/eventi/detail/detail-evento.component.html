@@ -1,0 +1,418 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div
+  class="main-container evento-dettaglio"
+  fxLayout="row"
+  fxLayoutAlign="center start"
+  fxLayoutGap="1rem">
+
+  <mat-card class="generic-card evento-dettaglio mat-elevation-z8">
+
+    <mat-card-header class="generic-card-header evento-dettaglio">
+      <mat-icon mat-card-avatar>event</mat-icon>
+      <mat-card-title
+        class="title-actions-chips"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+      >
+        <div class="container-title-left"
+             fxLayout="row"
+             fxLayoutAlign="space-between center"
+        >
+          <!-- title -->
+          <span style="text-transform: uppercase" class="title">{{evento.title}}</span>
+          <!-- chip list -->
+          <mat-chip-list class="mat-chip evento-dettaglio">
+            <mat-chip selected *ngIf="statoIscrizioneEvento === 1" class="green">ISCRIZIONE APERTA</mat-chip>
+            <mat-chip selected *ngIf="statoIscrizioneEvento === 2" class="red">ISCRIZIONE CHIUSA</mat-chip>
+            <mat-chip selected *ngIf="statoEvento === 1" class="green">EVENTO NON INIZIATO</mat-chip>
+            <mat-chip selected *ngIf="statoEvento === 2" class="yellow">EVENTO IN CORSO</mat-chip>
+            <mat-chip selected *ngIf="statoEvento === 3" class="red">EVENTO CONCLUSO</mat-chip>
+
+            <ng-container *ngIf="this.evento?.choiceId">
+              <ng-container [ngSwitch]="this.evento.choiceId">
+                    <mat-chip *ngSwitchCase="0" style="color: #6c757d; background-color: #fff;">IN ATTESA</mat-chip>
+                    <mat-chip *ngSwitchCase="1" style="color: #28a645; background-color: #fff;">PARTECIPA</mat-chip>
+                    <mat-chip *ngSwitchCase="2" style="color: #fdc007; background-color: #fff;">IN FORSE</mat-chip>
+                    <mat-chip *ngSwitchCase="3" style="color: #db3545; background-color: #fff;">RIFIUTA</mat-chip>
+              </ng-container>
+            </ng-container>
+          </mat-chip-list>
+
+        </div>
+        <!-- download button -->
+        <button mat-raised-button (click)="goToEdit()" *ngIf="statoEvento === 1">
+          <mat-icon>edit</mat-icon>
+          <span class="action-name">Modifica</span>
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+
+    <div class="container-content evento-dettaglio">
+      <mat-card-content class="generic-card-content evento-dettaglio">
+
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+        >
+
+          <div class="container-info-data evento-dettaglio" style="width: 350px">
+            <div>
+              <span class="field" style="display: inline-block;width: 50%; text-align: left">Data inizio: </span>
+              <span style="display: inline-block;width: 50%; text-align: center">{{ evento.startDate }}</span><br>
+            </div>
+            <div>
+              <span class="field" style="display: inline-block;width: 50%; text-align: left">Data fine: </span>
+              <span style="display: inline-block;width: 50%; text-align: center">{{ evento.endDate }}</span><br>
+            </div>
+            <div>
+              <span class="field" style="display: inline-block;width: 50%; text-align: left">Data fine registrazione: </span>
+              <span style="display: inline-block;width: 50%; text-align: center">{{ evento.closingDate }} </span><br>
+            </div>
+          </div>
+
+          <ng-container *ngIf="mioEvento; else notMyEvent">
+            <mat-button-toggle-group name="legacy" aria-label="Font Style" [formControl]="sceltaPartecipazione">
+              <mat-button-toggle style="color: #28a645; font-weight: bold; width: 100px;" value="1">PARTECIPA</mat-button-toggle>
+              <mat-button-toggle style="color: #fdc007; font-weight: bold; width: 100px;" value="2">IN FORSE </mat-button-toggle>
+              <mat-button-toggle style="color: #db3545; font-weight: bold; width: 100px;" value="3">RIFUTA</mat-button-toggle>
+            </mat-button-toggle-group>
+          </ng-container>
+          <ng-template #notMyEvent>
+            
+          </ng-template>
+          
+        </div>
+
+
+
+
+        <mat-tab-group class="tab-group evento-dettaglio">
+          <mat-tab class="tab" label="Informazioni">
+            <div class="container-content-tab">
+<!--              <div class="container-content-tab title evento-dettaglio">-->
+<!--                Descrizione-->
+<!--              </div>-->
+              <div class="container-content-tab content evento-dettaglio">
+                {{ evento.body? evento.body : 'Nessuna descrizione.'}}
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab class="tab" label="Documenti">
+            <div class="container-content-tab">
+<!--              <div class="container-content-tab title evento-dettaglio">-->
+<!--                Documenti associati-->
+<!--              </div>-->
+              <div class="container-content-tab content evento-dettaglio">
+                <ng-container *ngIf="documenti?.length === 0; else documentiAssociati">
+                  Non è stato associato a nessun documento.
+                </ng-container>
+                <ng-template #documentiAssociati>
+                  <div
+
+                    fxLayout="row wrap"
+                    fxLayoutAlign="space-around start"
+                  >
+                    <ng-container *ngFor="let documento of documenti;let i = index" >
+                      <mat-card class="mat-card-documento"
+                                style="margin-bottom: 15px;"
+                                fxLayout="column"
+                                fxLayoutAlign="space-between center"
+                                fxLayoutGap="10px"
+                      >
+                        <mat-progress-bar mode="indeterminate"
+                                          *ngIf="progressBar[i]"
+                                          style="position: absolute; top: 0; left: 0;"
+                        ></mat-progress-bar>
+                        <span style="width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: small"
+                        >{{documento.title}}</span>
+                        <mat-icon class="documento-icon">file_present</mat-icon>
+                        <span style="font-size: x-small">{{documento.fileName ? documento.fileName : 'Nessun nome'}}</span>
+                        <button mat-button class="basic-button-primary" (click)="downlodad(documento.token, i)">
+                          <mat-icon>cloud_download</mat-icon>&nbsp;
+                          <span>Download</span>
+                        </button>
+                      </mat-card>
+                    </ng-container>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab class="tab" label="Partecipanti">
+            <div class="container-content-tab">
+              <ng-container *ngTemplateOutlet="partecipantiTemplate"></ng-container>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+
+      </mat-card-content>
+
+    </div>
+
+  </mat-card>
+</div>
+
+<!-- lista partecipanti -->
+<ng-template #partecipantiTemplate>
+  <div class="container-partecipanti evento-dettaglio"
+       fxLayout="row"
+       fxLayoutAlign="center start"
+       fxLayoutGap="1rem"
+  >
+    <div class="partecipanti left"
+         fxFlex="20"
+    >
+
+      <mat-selection-list [(ngModel)]="sceltaLista" [multiple]="false">
+        <mat-list-option role="option" selected [value]="'INVITATI'">INVITATI</mat-list-option>
+        <mat-list-option role="option" [value]="'PARTENCIPANTI'">PARTECIPANTI</mat-list-option>
+        <mat-list-option role="option" [value]="'FORSE'">IN FORSE</mat-list-option>
+        <mat-list-option role="option" [value]="'RIFIUTATO'">RIFIUTATO</mat-list-option>
+        <mat-list-option role="option" [value]="'ATTESA'">IN ATTESA</mat-list-option>
+      </mat-selection-list>
+
+      <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        style="margin-top: 20px"
+      >
+        <button mat-raised-button class="btn-basic" (click)="exportInvitati()">
+          <mat-icon>file_download</mat-icon>
+          Export Invitati
+        </button>
+      </div>
+
+    </div>
+
+    <div class="partecipanti right"
+         fxFlex
+    >
+      <div
+        fxLayout="row" fxLayout.lt-md="column"
+        fxLayoutAlign="center start" fxLayoutAlign.lt-md="start stretch"
+        fxLayoutGap="15px"
+        style="margin-bottom: 20px; text-align: center"
+      >
+        <mat-card fxFlex style="background: #0065ca;color: white;">
+          <div>INVITATI</div>
+          <div>{{utentiInvitati.length}}</div>
+        </mat-card>
+
+        <mat-card fxFlex style="background: #28a645;color: white;">
+          <div>PARTECIPANTI</div>
+          <div>{{partecipanti.length}}</div>
+        </mat-card>
+
+        <mat-card fxFlex style="background: #fdc007;color: white;">
+          <div>IN FORSE</div>
+          <div>{{forse.length}}</div>
+        </mat-card>
+
+        <mat-card fxFlex style="background: #db3545;color: white;">
+          <div>RIFIUTATO</div>
+          <div>{{rifiutato.length}}</div>
+        </mat-card>
+
+        <mat-card fxFlex style="background: #6c747c;color: white;">
+          <div>IN ATTESA</div>
+          <div>{{attesa.length}}</div>
+        </mat-card>
+      </div>
+
+      <div>
+        <ng-container [ngSwitch]="sceltaLista">
+
+          <!-- INVITATI -->
+          <div *ngSwitchCase="'INVITATI'"
+            fxLayout.md="column" fxLayout.lt-md="column" fxLayout.gt-md="row"
+            fxLayoutAlign="center start" fxLayoutAlign.md="center center" fxLayoutAlign.lt-md="center center"
+            fxLayoutGap="1rem"
+            fxFlex
+           class="container-accordion evento-dettaglio"
+          >
+            <mat-accordion
+              class="container-accordion evento-dettaglio"
+              fxFlex="100"
+            >
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Elenco utenti invitati
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-panel-description>
+                  <ng-container *ngIf="utentiInvitati.length === 0; else chipInvitati">
+                    Non ci sono invitati.
+                  </ng-container>
+                  <ng-template #chipInvitati>
+                    <mat-chip-list aria-label="invitati*">
+                      <mat-chip *ngFor="let invitato of utentiInvitati">
+                        {{invitato.nome + " " + invitato.cognome}}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </ng-template>
+                </mat-panel-description>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <mat-accordion
+              class="container-accordion evento-dettaglio"
+              fxFlex="100"
+            >
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Elenco gruppi invitati
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-panel-description>
+                  <ng-container *ngIf=" gruppiInvitati.length === 0; else chipGruppi">
+                    Non ci sono gruppi invitati.
+                  </ng-container>
+                  <ng-template #chipGruppi>
+                    <mat-chip-list aria-label="gruppi*">
+                      <mat-chip *ngFor="let gruppo of gruppiInvitati">
+                        {{gruppo.nome}}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </ng-template>
+                </mat-panel-description>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+          </div>
+
+          <!-- PARTECIPANTI -->
+          <div class="container-accordion evento-dettaglio" *ngSwitchCase="'PARTENCIPANTI'">
+
+            <div fxFlex="100">
+              <mat-accordion
+                class="accordion evento-dettaglio"
+              >
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Elenco partecipanti
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-panel-description>
+                    <ng-container *ngIf="partecipanti.length === 0; else chipPartecipanti">
+                      Non ci sono partecipanti.
+                    </ng-container>
+                    <ng-template #chipPartecipanti>
+                      <mat-chip-list aria-label="partecipanti*">
+                        <mat-chip *ngFor="let invitato of partecipanti">
+                          {{invitato.nome + " " + invitato.cognome}}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </ng-template>
+                  </mat-panel-description>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+
+          </div>
+
+          <!-- FORSE -->
+          <div class="container-accordion evento-dettaglio" *ngSwitchCase="'FORSE'">
+
+            <div fxFlex="100">
+              <mat-accordion
+                class="accordion evento-dettaglio"
+              >
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Elenco utenti in Forse
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-panel-description>
+                    <ng-container *ngIf="forse.length === 0; else chipForse">
+                      Non ci sono partecipanti.
+                    </ng-container>
+                    <ng-template #chipForse>
+                      <mat-chip-list aria-label="forse*">
+                        <mat-chip *ngFor="let invitato of forse">
+                          {{invitato.nome + " " + invitato.cognome}}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </ng-template>
+                  </mat-panel-description>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+
+          </div>
+
+          <!-- RIFIUTATO -->
+          <div class="container-accordion evento-dettaglio" *ngSwitchCase="'RIFIUTATO'">
+
+            <div fxFlex="100">
+              <mat-accordion
+                class="accordion evento-dettaglio"
+              >
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Elenco utenti rifiutato
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-panel-description>
+                    <ng-container *ngIf="rifiutato.length === 0; else chipRifiutato">
+                      Non ci sono partecipanti.
+                    </ng-container>
+                    <ng-template #chipRifiutato>
+                      <mat-chip-list aria-label="rifiutato*">
+                        <mat-chip *ngFor="let invitato of rifiutato">
+                          {{invitato.nome + " " + invitato.cognome}}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </ng-template>
+                  </mat-panel-description>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+
+          </div>
+
+          <!-- ATTESA -->
+          <div class="container-accordion evento-dettaglio" *ngSwitchCase="'ATTESA'">
+
+            <div fxFlex="100">
+              <mat-accordion
+                class="accordion evento-dettaglio"
+              >
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Elenco utenti in attesa
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-panel-description>
+                    <ng-container *ngIf="attesa.length === 0; else chipAttesa">
+                      Non ci sono partecipanti.
+                    </ng-container>
+                    <ng-template #chipAttesa>
+                      <mat-chip-list aria-label="attesa*">
+                        <mat-chip *ngFor="let invitato of attesa">
+                          {{invitato.nome + " " + invitato.cognome}}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </ng-template>
+                  </mat-panel-description>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</ng-template>
+

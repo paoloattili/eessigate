@@ -1,0 +1,172 @@
+<div class="search-area">
+  <mat-card class="search-card mat-elevation-z8">
+    <mat-tab-group>
+      <mat-tab label="Cartelle" class="search-tab">
+        <div class="search-tab-content">
+          <mat-form-field appearance="fill">
+            <mat-label> Cerca </mat-label>
+            <input type="text" matInput>
+            <mat-icon matSuffix> search </mat-icon>
+          </mat-form-field>
+          <app-folder-tree [folders]="folders" (onSelectedFolder)="onSelectedFolder($event)"></app-folder-tree>
+        </div>
+      </mat-tab>
+      <mat-tab label="Ricerca" class="search-tab">
+        <div class="search-tab-content">
+          <mat-form-field appearance="fill">
+            <mat-label> Autore </mat-label>
+            <input matInput type="text" placeholder="Selezionare l'autore..." [formControl]="fcAuthorAC"
+              [matAutocomplete]="authorAC">
+            <mat-autocomplete #authorAC="matAutocomplete">
+              <mat-option *ngFor="let author of searchFilterValues.authors | async" [value]="author">
+                {{ author }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label> Organizzazione </mat-label>
+            <mat-select>
+              <mat-option *ngFor="let organization of searchFilterValues.organizations" [value]="organization">
+                {{ organization }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label> Tipologia Documento </mat-label>
+            <mat-select>
+              <mat-option *ngFor="let documentType of searchFilterValues.documentTypes" [value]="documentType">
+                {{ documentType }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label> Stato Documento </mat-label>
+            <mat-select>
+              <mat-option *ngFor="let documentState of searchFilterValues.documentStates" [value]="documentState">
+                {{ documentState }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label> Tags </mat-label>
+            <mat-select>
+              <mat-option *ngFor="let tag of searchFilterValues.tags" [value]="tag">
+                {{ tag }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="align-center">
+            <button mat-raised-button class="btn-primary">
+              <mat-icon> search </mat-icon>
+              <span> Cerca </span>
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>
+<div class="documents-area">
+  <mat-card class="documents-card mat-elevation-z8">
+    <mat-tab-group>
+      <mat-tab label="Documenti" class="documents-tab">
+        <div class="documents-tab-content">
+
+          <div class="rapid-filter-area align-left">
+            <mat-form-field>
+              <mat-label> Filtra </mat-label>
+              <input matInput (keyup)="applyFilter($event)">
+            </mat-form-field>
+          </div>
+
+          <div class="selected-folder align-right">
+            <span *ngIf="selectedFolder">
+              {{ selectedFolder.name }} ({{ getDocumentsAmount() || 0 }})
+            </span>
+          </div>
+
+          <div class="mat-elevation-z8">
+            <table mat-table matSort [dataSource]="dataSource" class="documents-table">
+
+              <!-- Colonna Titolo -->
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo </th>
+                <td mat-cell *matCellDef="let row"> {{ row.title }} </td>
+              </ng-container>
+
+              <!-- Colonna Cartella -->
+              <ng-container matColumnDef="folderName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cartella </th>
+                <td mat-cell *matCellDef="let row"> {{ row.folderName }} </td>
+              </ng-container>
+
+              <!-- Colonna Tipologia -->
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipologia </th>
+                <td mat-cell *matCellDef="let row"> {{ row.type }} </td>
+              </ng-container>
+
+              <!-- Colonna Autore -->
+              <ng-container matColumnDef="author">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Autore </th>
+                <td mat-cell *matCellDef="let row"> {{ row.author }} </td>
+              </ng-container>
+
+              <!-- Colonna Visibilità -->
+              <ng-container matColumnDef="visibility">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-center"> Visibilità </th>
+                <td mat-cell *matCellDef="let row" class="align-center">
+                  <mat-icon *ngIf="row.visibility === 0" title="Tutti gli utenti"> public </mat-icon>
+                  <mat-icon *ngIf="row.visibility === 1" title="Solo la mia organizzazione"> domain </mat-icon>
+                  <mat-icon *ngIf="row.visibility === 2" title="Gruppi"> group </mat-icon>
+                </td>
+              </ng-container>
+
+              <!-- Colonna Stato -->
+              <ng-container matColumnDef="state">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-center"> Stato </th>
+                <td mat-cell *matCellDef="let row" class="align-center">
+                  <mat-icon *ngIf="row.state === 0" title="Bozza"> edit_note </mat-icon>
+                  <mat-icon *ngIf="row.state === 1" title="Ufficiale"> task_alt </mat-icon>
+                </td>
+              </ng-container>
+
+              <!-- Colonna Azioni -->
+              <ng-container matColumnDef="actions" class="align-center">
+                <th mat-header-cell *matHeaderCellDef class="align-center"> Azioni </th>
+                <td mat-cell *matCellDef="let row">
+                  <button class="action-btn" title="Dettaglio">
+                    <mat-icon> search </mat-icon>
+                  </button>
+                  <button class="action-btn" title="Download">
+                    <mat-icon> download </mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              <!-- NO DATA COLUMN -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="7"> Nessun record presente </td>
+              </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Seleziona pagina"></mat-paginator>
+          </div>
+
+        </div>
+      </mat-tab>
+      <mat-tab disabled>
+        <ng-template mat-tab-label>
+          <button mat-raised-button class="upload-doc-btn">
+            <mat-icon> upload </mat-icon>
+            <span> Carica Documento </span>
+          </button>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+
+</div>

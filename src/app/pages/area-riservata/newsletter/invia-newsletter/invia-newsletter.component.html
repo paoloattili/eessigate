@@ -1,0 +1,745 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="page-container">
+
+    <mat-card class="generic-card mat-elevation-z8" fxLayout="column">
+
+        <mat-card-header class="generic-card-header">
+            <mat-icon mat-card-avatar>edit_note</mat-icon>
+            <mat-card-title>Invia newsletter</mat-card-title>
+        </mat-card-header>
+
+        <div class="newsletter-content" fxLayout="column">
+
+            <mat-card-content class="generic-card-content">
+
+                <form id="newsletter-form" [formGroup]="newsletterForm" fxLayout="column" (ngSubmit)="invia()">
+
+                    <div class="container-primo-blocco" fxLayout.gt-md="row" fxLayout="column" fxLayoutGap="1rem">
+
+                        <div class="container-icon" fxFlex.gt-sm="30" fxLayoutAlign="center center">
+                            <mat-icon class="icon-form">email</mat-icon>
+                        </div>
+
+                        <div class="container-form" fxFlex.gt-sm="70">
+                            <div class="input-container" fxLayout="column">
+
+                                <!-- SOTTOTITOLO -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Sottotitolo*</mat-label>
+                                    <input formControlName="sottotitolo" matInput>
+
+                                    <!-- ERROR MSG -->
+                                    <ng-container
+                                        *ngIf="newsletterForm.get(['sottotitolo'])!.invalid && (newsletterForm.get(['sottotitolo'])!.dirty || newsletterForm.get(['sottotitolo'])!.touched)">
+
+                                        <mat-error *ngIf="newsletterForm.get(['sottotitolo'])!.errors.required">
+                                            Questo campo è obbligatorio!
+                                        </mat-error>
+
+                                        <mat-error *ngIf="newsletterForm.get(['sottotitolo'])!.errors.pattern">
+                                            Questo campo contiene caratteri non ammessi.
+                                        </mat-error>
+
+                                    </ng-container>
+
+                                </mat-form-field>
+
+                                <!-- DATA RANGE -->
+                                <div fxFlex fxLayout="row" fxLayout.lt-sm="column"
+                                    fxLayoutAlign="start center" fxLayoutGap="3rem">
+
+                                    <!-- data inizio -->
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Data da*</mat-label>
+                                        <input matInput formControlName="dataInizio" [matDatepicker]="dataInizio" [max]="newsletterForm.get(['dataFine']).value ? newsletterForm.get(['dataFine']).value : oggi">
+                                        <mat-datepicker-toggle matSuffix [for]="dataInizio"></mat-datepicker-toggle>
+                                        <mat-datepicker #dataInizio ></mat-datepicker>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="newsletterForm.get(['dataInizio'])!.invalid && (newsletterForm.get(['dataInizio'])!.dirty || newsletterForm.get(['dataInizio'])!.touched)">
+                                            <mat-error *ngIf="newsletterForm.get(['dataInizio'])!.errors.required">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                    <!-- data fine -->
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Data a*</mat-label>
+                                        <input matInput formControlName="dataFine" [matDatepicker]="dataFine" [max]="oggi" [min]="newsletterForm.get(['dataInizio']).value ? newsletterForm.get(['dataInizio']).value : oggi">
+                                        <mat-datepicker-toggle matSuffix [for]="dataFine"></mat-datepicker-toggle>
+                                        <mat-datepicker #dataFine></mat-datepicker>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="newsletterForm.get(['dataFine'])!.invalid && (newsletterForm.get(['dataFine'])!.dirty || newsletterForm.get(['dataFine'])!.touched)">
+                                            <mat-error *ngIf="newsletterForm.get(['dataFine'])!.errors.required">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                                <mat-error *ngIf="newsletterForm.errors?.dateRange">
+                                    Il range non è valido! verifica l'inserimento della data inizio e fine.
+                                </mat-error>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <!-- SEZIONI -->
+                    <div class="label-sezioni">
+                        <h2>Sezioni da includere*</h2>
+                    </div>
+
+                    <div class="sezioni-container" fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap="1rem">
+                        <app-dual-list-box [source]="listaSezioni" [dateSettate]="dateSettate"></app-dual-list-box>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <div class="label-sezioni">
+                        <h2>Destinatari*</h2>
+                    </div>
+
+                    <ng-container formGroupName="destinatari">
+
+                        <div class="destinatari-container">
+
+                            <mat-radio-group aria-labelledby="destinatari-label" formControlName="value"
+                                aria-label="Destinatari">
+
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="0">Tutti gli utenti</mat-radio-button>
+                                    </div>
+                                    <div fxFlex.gt-sm="80">
+                                        <div class="empty-field" fxFlex></div>
+                                    </div>
+                                </div>
+
+                                <!-- SELECT UTENTI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="1">Solo gli utenti selezionati</mat-radio-button>
+                                    </div>
+
+                                    <div fxFlex.gt-sm="80">
+                                        <mat-form-field appearance="outline" fxFlex>
+                                            <mat-label>Utenti*</mat-label>
+                                            <mat-chip-list #utentiList aria-label="Utenti*">
+                                                <mat-chip *ngFor="let utente of utenti"
+                                                    (removed)="rimuoviUtente(utente)">
+                                                    {{ utente.nominativo }}
+                                                    <button matChipRemove>
+                                                        <mat-icon>cancel</mat-icon>
+                                                    </button>
+                                                </mat-chip>
+                                                <input #utentiInput [formControl]="utentiInputControl"
+                                                    [matAutocomplete]="autoUtenti" [matChipInputFor]="utentiList"
+                                                    [disabled]="destinatari.get(['value']).value !== '1'">
+                                                <mat-autocomplete #autoUtenti="matAutocomplete"
+                                                    (optionSelected)="selectedUtente($event)">
+                                                    <mat-option *ngFor="let utente of filteredUtenti | async"
+                                                        [value]="utente">
+                                                        <span>{{ utente.nominativo }}</span>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-chip-list>
+
+                                            <!-- ERROR MSG -->
+                                            <ng-container
+                                                *ngIf="(utentiInputControl!.dirty || utentiInputControl!.touched || destinatari.get(['value']).value === '1')">
+                                                <mat-error
+                                                    *ngIf="utentiInputControl!.touched && destinatari.get(['value']).value === '1' && this.utenti.length <= 0">
+                                                    Questo campo è obbligatorio!
+                                                </mat-error>
+                                            </ng-container>
+
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <!-- SELECT GRUPPI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="2">Solo i gruppi selezionati</mat-radio-button>
+                                    </div>
+
+                                    <mat-form-field appearance="outline" fxFlex.gt-sm="80">
+                                        <mat-label>Gruppi*</mat-label>
+                                        <mat-chip-list #gruppiList aria-label="Gruppi*">
+                                            <mat-chip *ngFor="let gruppo of gruppi" (removed)="rimuoviGruppo(gruppo)">
+                                                {{ gruppo.name }}
+                                                <button matChipRemove>
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip>
+                                            <input #gruppiInput [formControl]="gruppiInputControl"
+                                                [matAutocomplete]="autoGruppi" [matChipInputFor]="gruppiList"
+                                                [disabled]="destinatari.get(['value']).value !== '2'">
+                                            <mat-autocomplete #autoGruppi="matAutocomplete"
+                                                (optionSelected)="selectedGruppo($event)">
+                                                <mat-option *ngFor="let gruppo of filteredGruppi | async"
+                                                    [value]="gruppo">
+                                                    <span>{{ gruppo.name }}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="(gruppiInputControl!.dirty || gruppiInputControl!.touched || destinatari.get(['value']).value === '2')">
+                                            <mat-error
+                                                *ngIf="gruppiInputControl!.touched && destinatari.get(['value']).value === '2' && this.gruppi.length <= 0">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                                <!-- SELECT RUOLI -->
+                                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutGap.gt-sm="3rem">
+
+                                    <div fxFlex.gt-sm="20">
+                                        <mat-radio-button value="3">Solo i ruoli selezionati</mat-radio-button>
+                                    </div>
+
+                                    <mat-form-field appearance="outline" fxFlex.gt-sm="80">
+                                        <mat-label>Ruoli*</mat-label>
+                                        <mat-chip-list #ruoliList aria-label="Ruoli*">
+                                            <mat-chip *ngFor="let ruolo of ruoli" (removed)="rimuoviRuolo(ruolo)">
+                                                {{ ruolo.nome }}
+                                                <button matChipRemove>
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                            </mat-chip>
+                                            <input #ruoliInput [formControl]="ruoliInputControl"
+                                                [matAutocomplete]="autoRuoli" [matChipInputFor]="ruoliList"
+                                                [disabled]="destinatari.get(['value']).value !== '3'">
+                                            <mat-autocomplete #autoRuoli="matAutocomplete"
+                                                (optionSelected)="selectedRuolo($event)">
+                                                <mat-option *ngFor="let ruolo of filteredRuoli | async" [value]="ruolo">
+                                                    <span>{{ ruolo.nome }}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-chip-list>
+
+                                        <!-- ERROR MSG -->
+                                        <ng-container
+                                            *ngIf="(ruoliInputControl!.dirty || ruoliInputControl!.touched || destinatari.get(['value']).value === '3')">
+                                            <mat-error
+                                                *ngIf="ruoliInputControl!.touched && destinatari.get(['value']).value === '3' && this.ruoli.length <= 0">
+                                                Questo campo è obbligatorio!
+                                            </mat-error>
+                                        </ng-container>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                            </mat-radio-group>
+
+                        </div>
+                    </ng-container>
+
+                </form>
+
+            </mat-card-content>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-actions>
+
+                <div fxLayout.gt-sm="row" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem">
+
+                    <!-- ACTION INVIA -->
+                    <ng-container *ngIf="destinatari.get(['value']).value == 0">
+
+                        <button class="button-primary" form="newsletter-form" mat-flat-button
+                            [disabled]="newsletterForm.invalid || listaSezioniSelezionate.length <= 0">
+                            <mat-icon>send</mat-icon>
+                            Invia
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 1">
+
+                        <button class="button-primary" form="newsletter-form" mat-flat-button
+                            [disabled]="newsletterForm.invalid || this.utenti.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-icon>send</mat-icon>
+                            Invia
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 2">
+
+                        <button class="button-primary" form="newsletter-form" mat-flat-button
+                            [disabled]="newsletterForm.invalid || this.gruppi.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-icon>send</mat-icon>
+                            Invia
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 3">
+
+                        <button class="button-primary" form="newsletter-form" mat-flat-button
+                            [disabled]="newsletterForm.invalid || this.ruoli.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-icon>send</mat-icon>
+                            Invia
+                        </button>
+
+                    </ng-container>
+
+                    <!-- ANTEPRIMA -->
+                    <ng-container>
+
+                        <button type="button" mat-stroked-button (click)="openModalPreview()"
+                            [disabled]="newsletterForm.invalid || listaSezioniSelezionate.length <= 0">
+                            <mat-icon>remove_red_eye</mat-icon>
+                            Preview
+                        </button>
+
+                    </ng-container>
+
+                </div>
+
+                <!-- ERROR MSG -->
+                <div fxLayout="column" class="errors-container">
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 1">
+                        <ng-container
+                            *ngIf="(newsletterForm.invalid && (newsletterForm.touched) && newsletterForm.invalid) || this.utenti.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 2">
+                        <ng-container
+                            *ngIf="(newsletterForm.invalid && (newsletterForm.touched) && newsletterForm.invalid) || this.gruppi.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="destinatari.get(['value']).value == 3">
+                        <ng-container
+                            *ngIf="(newsletterForm.invalid && (newsletterForm.touched) && newsletterForm.invalid) || this.ruoli.length <= 0 || listaSezioniSelezionate.length <= 0">
+                            <mat-error>
+                                I campi con (*) sono obbligatori.
+                            </mat-error>
+                        </ng-container>
+                    </ng-container>
+
+                </div>
+
+            </mat-card-actions>
+
+        </div>
+
+    </mat-card>
+
+</div>
+
+<div [hidden]="true" #divTemplate>
+    <ng-container *ngTemplateOutlet="bodyNewletter"></ng-container>
+</div>
+
+<ng-template #bodyNewletter>
+    <!-- TEMPLATE NEWSLETTER -->
+    <table  width="900" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center">
+        <tbody id="body-template">
+            <tr id="titolo">
+                <td width="900" bgcolor="#3c8dbc" height="100" align="center" style="padding-left: 20px; font-size: 45px; font-weight: bold;">
+                    <span style="color: #fff; font-family: Calibri, Helvetica, sans-serif;">Newsletter EESSIGate </span>
+                </td>
+            </tr>
+            <tr id="intestazione">
+                <td width="900" bgcolor="#c4ddeb" height="50" align="left" style="padding-top: 15px;">
+                    <table width="100%" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center" style="background-color: rgb(196, 221, 235);">
+                        <tbody>
+                            <tr>
+                                <td width="80" align="left" style="float: left;font-size: 18px; font-weight: normal; color: #000; font-family: Calibri, Helvetica, sans-serif; font-style: italic; padding-bottom: 10px; padding-left: 20px;">
+                                    <span id="sottitoloNewsletter" [innerText]="newsletterForm.get(['sottotitolo'])?.value"></span>
+                                </td>
+                                <td width="310" align="right" style="font-size: 18px; font-weight: normal; color: #000; font-family: Calibri, Helvetica, sans-serif; padding-bottom: 10px; padding-right: 20px;">
+                                    <span>Periodo Rif.:&nbsp;</span>
+                                    <span id="dataInizio" [innerText]="newsletterForm.get(['dataInizio'])?.value | date:'dd/MM/yyyy'"></span>
+                                    -&nbsp;<span id="dataFine" [innerText]="newsletterForm.get(['dataFine'])?.value | date:'dd/MM/yyyy'"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table width="100%" style="border: 0;" cellspacing="0" cellpadding="0" bgcolor="#fff" align="center">
+                        <tbody>
+                            <tr>
+                                <td width="300" height="13" bgcolor="#009246"></td>
+                                <td width="300" height="13" bgcolor="#ffffff"></td>
+                                <td width="300" height="13" bgcolor="#ce2b37"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <ng-container *ngFor="let sezione of listaSezioniSelezionate">
+                <!-- NEWS -->
+                <tr id="news" *ngIf="sezione.key === '1'">
+                    <td width="900" style="padding-top: 40px;">
+                        <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td width="40" align="left" border="0" style="background-color: #009246; opacity: 1;"></td>
+                                    <td width="820" style="padding: 0 40px 0 40px;">
+                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="720" style="padding-bottom: 25px;">
+                                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="720" style="padding-top: 27px;">
+                                                                        <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #009246;opacity: 1; float: left;">News</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                        <!-- ITERO NEWS -->
+                                                                        <ng-container *ngIf="argomentiNews?.length > 0; else nessunaNews">
+                                                                            <ng-container *ngFor="let n of argomentiNews; let i=index">
+                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-size: 16px; float: left;">
+                                                                                                <span style="font-weight: normal;">Autore</span>&nbsp; <span style="font-weight: bold;"> {{ n.nominativo }} </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                                <span style="font-weight: normal;"> {{ n.dataInserimento | date:'dd/MM/yyyy hh:mm' }} </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                                <a [href]="'EESSIGateWEB/area-riservata/contenuti/visualizza-contenuti?cryptKey='+n.token"> {{ n.titolo }} </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="font-weight: normal; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                                <p style="margin-bottom: 0;"> {{ n.sommario }} </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <hr *ngIf="i < (argomentiNews?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                        <ng-template #nessunaNews>
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                            <span>Nessuna news trovata nel range indicato.</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </ng-template>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <!-- NEWS ETERNE-->
+                <tr id="news-esterne" *ngIf="sezione.key === '5'">
+                    <td width="900" style="padding-top: 40px;">
+                        <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td width="40" align="left" border="0" style="background-color: #b3000c; opacity: 1;"></td>
+                                    <td width="820" style="padding: 0 40px 0 40px;">
+                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="720" style="padding-bottom: 25px;">
+                                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="720" style="padding-top: 27px;">
+                                                                        <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #b3000c;opacity: 1;float: left;">News (External)</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                        <!-- ITERO NEWS ESTERNE -->
+                                                                        <ng-container *ngIf="argomentiNewsEsterne?.length > 0; else nessunaNewsEsterna">
+                                                                            <ng-container *ngFor="let n of argomentiNewsEsterne; let i=index">
+                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-size: 16px; float: left;">
+                                                                                                <span style="font-weight: normal;">Autore</span>&nbsp; <span style="font-weight: bold;"> {{ n.nominativo }} </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                                <span style="font-weight: normal;"> {{ n.dataInserimento | date:'dd/MM/yyyy hh:mm' }} </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                                <a [href]="'EESSIGateWEB/area-riservata/contenuti/visualizza-contenuti?cryptKey='+n.token"> {{ n.titolo }} </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="font-weight: normal; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                                <p style="margin-bottom: 0;"> {{ n.sommario }} </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <hr *ngIf="i < (argomentiNewsEsterne?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                        <ng-template #nessunaNewsEsterna>
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                            <span>Nessuna news esterna trovata nel range indicato.</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </ng-template>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <!-- EVENTI -->
+                <tr id="eventi" *ngIf="sezione.key === '8'">
+                    <td width="900" style="padding-top: 40px;">
+                        <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td width="40" align="left" border="0" style="background-color: #ff7c00; opacity: 1;"></td>
+                                    <td width="820" style="padding: 0 40px 0 40px;">
+                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="720" style="padding-bottom: 25px;">
+                                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="720" style="padding-top: 27px;">
+                                                                        <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #ff7c00;opacity: 1;float: left;">Eventi</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                        <!-- ITERO GLI EVENTI -->
+                                                                        <ng-container *ngIf="argomentiEventi?.length > 0; else nessunEvento">
+                                                                            <ng-container *ngFor="let e of argomentiEventi; let i=index">
+                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; opacity: 1; font-weight: bold; font-size: 18px;float: left;">
+                                                                                                <img alt="newsletter_calendar" border="0" width="17" height="17" src="assets/images/calendar.png" />&nbsp;<a [href]="'EESSIGateWEB/#/area-riservata/eventi/dettaglio?cryptKey='+e.token">{{ e.title }}</a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;padding-bottom: 20px;font-style: italic;float: left;">
+                                                                                                <span style="font-weight: normal;">{{ e.startDate | date:'dd/MM/yyyy hh:mm' }}</span>&nbsp;-&nbsp;<span style="font-weight: normal;">{{ e.endDate | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;float: left;">
+                                                                                                <span style="font-weight: bold;">{{ e.location }}</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px;color: #707070;opacity: 1;font-weight: normal;font-size: 14px;float: left;">
+                                                                                                <span style="font-weight: normal;">Scadenza registrazione:&nbsp;</span><span style="font-weight: normal;">{{ e.closingDate | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <hr *ngIf="i < (argomentiEventi?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                        <ng-template #nessunEvento>
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                            <span>Nessun evento trovato nel range indicato.</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </ng-template>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <!-- DOCUMENTI -->
+                <tr id="documenti" *ngIf="sezione.key === '2'">
+                    <td width="900" style="padding-top: 40px;">
+                        <table width="100%" style="border: 0; background-color: #fbfbfb;" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td width="40" align="left" border="0" style="background-color: #3c8dbc; opacity: 1;"></td>
+                                    <td width="820" style="padding: 0 40px 0 40px;">
+                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="720" style="padding-bottom: 25px;">
+                                                        <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="720" style="padding-top: 27px;">
+                                                                        <span style="text-transform: uppercase;font-style: normal;font-weight: 900;font-family: Calibri, Helvetica, sans-serif;font-size: 30px;letter-spacing: 0px;color: #3c8dbc;opacity: 1;float: left;">Documenti</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="820" style="padding-bottom: 35px; padding-top: 25px; font-family: Calibri, Helvetica, sans-serif;">
+                                                                        <!-- ITERO I DOCUMENTI -->
+                                                                        <ng-container *ngIf="argomentiDocumento?.length > 0; else nessunDocumento">
+                                                                            <ng-container *ngFor="let d of argomentiDocumento; let i=index">
+                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1;font-size: 16px;float: left;">
+                                                                                                <span style="font-weight: normal;">Uploader</span>&nbsp; <span style="font-weight: bold;">{{ d.author }}</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="letter-spacing: 0px; color: #707070; opacity: 1; font-weight: normal; font-style: italic; font-size: 14px; padding-bottom: 20px;float: left;">
+                                                                                                <span style="font-weight: normal;">{{ d.creationDate | date:'dd/MM/yyyy hh:mm' }}</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td align="left" style="">
+                                                                                                <table width="100%" cellspacing="0" cellpadding="0" align="left" border="0">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <td align="left" style="float: left;">
+                                                                                                                <a [href]="d.categoryType !== null && d.categoryType === 'NG.EDE Accounting & Deliverables'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/accounting-and-deliverables/detail-documento?cryptKey='+d.token
+                                                                                                                : d.categoryType !== null && d.categoryType === 'NG.EDE Documentation'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/ng-documentation/detail-documento?cryptKey='+d.token
+                                                                                                                : d.categoryType !== null && d.categoryType === 'EESSI News & Documentation'? '/AS0207/EESSIGateWEB/area-riservata/spazio-di-lavoro/eessi-news-documentation/detail-documento?cryptKey='+d.token : ''"
+                                                                                                                style="letter-spacing: 0px; color: #0468bf; opacity: 1; font-weight: bold; font-size: 18px;">{{ d.title }}</a>&nbsp;<span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 16px;">/&nbsp;</span>
+                                                                                                                <span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 16px;">{{ d.documentType }}</span>
+                                                                                                            </td>
+                                                                                                            <td align="right" style="float: right;">
+                                                                                                                <img alt="header_newsletter_commenti" border="0" width="25" height="15" src="assets/images/Raggruppa242.png" />&nbsp;&nbsp;<span style="font-weight: normal; letter-spacing: 0px; color: #0d0d0d; opacity: 1; font-size: 14px;">{{ d.countCommenti }} commenti</span>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                <hr *ngIf="i < (argomentiDocumento?.length - 1)" width="100%" style="margin-top: 25px; margin-bottom: 25px;" />
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                        <ng-template #nessunDocumento>
+                                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td align="left" style="font-weight: bold; font-size: 16px; letter-spacing: 0px; color: #0d0d0d; opacity: 1;float: left;">
+                                                                                            <span>Nessun documento trovato nel range indicato.</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </ng-template>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </ng-container>
+            <tr id="footer">
+                <td style="padding-top: 45px;" width="900">
+                    <table width="100%" style="top: 372px; left: 62px; background-color: #c4ddeb; opacity: 1; border: 0;" cellspacing="0" cellpadding="0" align="center">
+                        <tbody>
+                            <tr>
+                                <td align="left" style="padding: 15px 6px 15px 15px;"><img height="30" style="padding-right: 6px;" src="assets/images/flag-of-europe.png" alt="logo EU" /></td>
+                                <td align="left" valign="center" style="font-size: 13px; font-family: Calibri, Helvetica, sans-serif;">
+                                    <strong>Copyright © EESSI<i>GATE</i> 2018 </strong> |
+                                    <img height="17" src="assets/images/logo-INPS-2.png" alt="Logo INPS" />
+                                    -
+                                    <img height="18" src="assets/images/logo-INAIL-2.png" alt="Logo INAIL" />
+                                    &nbsp;&nbsp;NG.EDE - National Gateway for European Data Exchange
+                                </td>
+                                <td align="right" style="padding-right: 15px;font-size: 14px;">
+                                    <a href="#" style="padding-left: 75px;"><strong>Contattaci</strong></a>
+                                    <strong> | </strong>
+                                    <a href="#"><strong>Disclaimer</strong></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>

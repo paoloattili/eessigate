@@ -1,0 +1,100 @@
+.mat-card-documento {
+  width: 170px;
+  height: 200px;
+  //border-top: thick solid #007db3;
+  //border-bottom: thick solid #007db3;
+  text-align: center;
+}
+
+.documento-icon {
+  transform: scale(3);
+}
+
+.container-accordion.evento-dettaglio {
+  width: 100%;
+}
+
+/**
+layout generic card content
+ */
+.generic-card-content.evento-dettaglio > *{
+  margin-bottom: 15px;
+}
+
+/**
+custom fields
+ */
+.generic-card-content.evento-dettaglio {
+  .field{
+    font-weight: 700!important;
+    color: #6c757d!important;
+  }
+}
+
+/**
+tabs content
+ */
+.tab-group.evento-dettaglio {
+  .mat-tab-body-wrapper {
+    mat-tab-body {
+      .container-content-tab {
+        padding: 10px 0 10px 0;
+      }
+    }
+  }
+}
+
+/**
+tab content title
+ */
+.container-content-tab.title.evento-dettaglio {
+  font-weight: 700!important;
+  font-size: 1.25rem;
+}
+
+
+/**
+custom card
+ */
+.generic-card.evento-dettaglio{
+  width: 90%;
+  margin: auto;
+  min-height: 700px;
+}
+
+.generic-card-header.evento-dettaglio {
+  .mat-card-header-text {
+    width: 100% !important;
+    margin-right: 0 !important;
+    .title-actions-chips {
+      width: 100% !important;
+
+      .title {
+        margin-right: 20px;
+        max-width: 400px;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+
+/**
+Colori stati
+ */
+.mat-chip.evento-dettaglio {
+  .mat-chip-list-wrapper {
+    .green {
+      background-color: #28a645;
+      color: #fff;
+    }
+    .red {
+      background-color: #db3545;
+      color: #fff;
+    }
+    .yellow {
+      background-color: #fdc007;
+      color: #fff;
+    }
+  }
+}

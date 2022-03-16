@@ -1,0 +1,20 @@
+<div class="breadcrumb-container">
+    <ol class="breadcrumb">
+        <li *ngFor="let breadcrumb of breadcrumbs; let i = index; last as isLast"
+            class="breadcrumb-item"
+            [ngClass]="{'active': true}"
+            aria-current="page">
+
+            <a *ngIf="(breadcrumb.path || breadcrumb.label  === 'Home') && !isLast; else noPath" [routerLink]="[breadcrumb.path? breadcrumb.path : '']">
+                <span class="icon-home" *ngIf="breadcrumb.label === 'Home'; else notHome">
+                  <mat-icon style="color:#0065ca; vertical-align: sub;"> home </mat-icon>
+                </span>
+                <ng-template #notHome>{{ breadcrumb.label }}</ng-template>
+            </a>
+            <ng-template #noPath>
+              <span>{{ breadcrumb.label }}</span>
+            </ng-template>
+        </li>
+    </ol>
+</div>
+

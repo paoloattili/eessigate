@@ -1,0 +1,51 @@
+.tree-filter{
+    margin: 1rem 2rem 0 2rem;
+}
+
+mat-tree {
+  margin: 0 2rem 0.5rem 2rem;
+  max-height: 605px;
+  overflow-y: auto;
+}
+
+mat-icon {
+  &.disabled{
+    color: gray;
+  }
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.tree-invisible {
+  display: none;
+}
+
+.select-all-button {
+  text-align: center;
+  margin-top: .4rem;
+}
+
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.selected-node {
+  background-color: lavender;
+  border-radius: 5px;
+}
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.tree .mat-nested-tree-node div[role=group] {
+  padding-left: 20px;
+}
+
+.mat-tree-node mat-icon {
+  margin-right: 5px;
+}

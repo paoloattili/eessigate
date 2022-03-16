@@ -1,0 +1,44 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="workspace-container"
+     fxLayout="row" fxLayout.lt-md="column"
+     fxLayoutGap="1rem"
+     fxLayoutAlign="center start" fxLayoutAlign.lt-md="start center"
+>
+  <div class="tree-container"
+       fxFlex="30" fxFlex.lt-md="100">
+    <mat-card class="workspace-card mat-elevation-z8">
+      <mat-tab-group color="white" class="card-header">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>folder</mat-icon>
+            Cartelle
+          </ng-template>
+          <!-- ALBERO CARTELLE-->
+          <!--;<ng-container *ngIf="categories.length > 0 else nessunaCategoriaTrovata"> -->
+            <app-tree [categories]="categories" (clickNode)="clickNode($event); takeNameFolder($event)">
+            </app-tree>
+          <!--</ng-container>-->
+          <!-- <ng-template #nessunaCategoriaTrovata>
+            <div style="margin:20px;">
+              <span>Nessuna cartella presente.</span>
+            </div>
+          </ng-template> -->
+
+        </mat-tab>
+        <mat-tab *ngIf="enableRicercaComponent && categories.length > 0 ">
+          <ng-template mat-tab-label>
+            <mat-icon>search</mat-icon>
+            Ricerca
+          </ng-template>
+          <!-- RICERCA -->
+          <app-ricerca></app-ricerca>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+  <div class="documents-container"
+       fxFlex="70" fxFlex.lt-md="100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+.breadcrumb-container {
+    color: #5a6672;
+}
+
+.icon-home {
+
+    mat-icon {
+        vertical-align: middle;
+        font-size: 1.15rem;
+        text-align: center;
+        width: 1.2rem;
+        text-decoration: none;
+        color: #5a6672;
+    }
+}
+
+
+.breadcrumb li {
+    display: inline;
+}
+
+.breadcrumb li+li:before {
+    content: " / ";
+    color: #5a6672;
+}
+
+.breadcrumb{
+    color: #5a6672;
+    padding: 0;
+    margin: 0;
+
+    a{
+      display: inline-block;
+      color: #0065ca;
+      text-decoration: none;
+    }
+}

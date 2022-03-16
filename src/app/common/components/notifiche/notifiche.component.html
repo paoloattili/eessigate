@@ -1,0 +1,62 @@
+<div class="menu-nav-notifications">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Notifiche">
+        <mat-icon [matBadge]="countNotifiche !== null? countNotifiche: ''" matBadgeColor="warn">notifications</mat-icon>
+    </button>
+    <mat-menu class="notifiche-container" #menu="matMenu">
+        <ng-container *ngIf="notifiche?.length > 0; else nessunaNotificaTrovata">
+            <button class="button-notifiche" mat-menu-item *ngFor="let n of notifiche; let i=index" (click)="goToNotifica(n)" [ngStyle]="{ 'border-bottom': notifiche.length > 0 && i < (notifiche.length - 1) ? 'thin solid #00000033' : 'none'}">
+                <div class="notifica-container" fxLayout="row">
+                    <ng-container *ngIf="n.idNotificationType === 1">
+                        <div fxFlex="80" fxLayout="rown">
+                            <div fxFlex="10" fxFlexAlign="start center">
+                                <mat-icon [ngStyle]="{ color: !n.toRead? '#0065cb' : '#000000de' }">messagge</mat-icon>
+                            </div>
+                            <div class="testo-notifica-container" fxFlex="90">
+                                <strong>{{ n.namingOwner }}</strong><span class="testo-notifica"> ha lasciato un commento ad un documento.</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="n.idNotificationType === 2">
+                        <div fxFlex="80" fxLayout="rown">
+                            <div fxFlex="10" fxFlexAlign="start center">
+                                <mat-icon [ngStyle]="{ color: !n.toRead? '#0065cb' : '#000000de' }">thumb_up</mat-icon>
+                            </div>
+                            <div class="testo-notifica-container" fxFlex="90">
+                                <strong>{{ n.namingOwner }}</strong><span class="testo-notifica"> ha messo "mi piace" ad un documento.</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="n.idNotificationType === 4">
+                        <div fxFlex="80" fxLayout="rown">
+                            <div fxFlex="10" fxFlexAlign="start center">
+                                <mat-icon [ngStyle]="{ color: !n.toRead? '#0065cb' : '#000000de' }">description</mat-icon>
+                            </div>
+                            <div class="testo-notifica-container" fxFlex="90">
+                                <strong>{{ n.namingOwner }}</strong><span class="testo-notifica"> ha caricato un documento.</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="n.idNotificationType === 3">
+                        <div fxFlex="80" fxLayout="rown">
+                            <div fxFlex="10" fxFlexAlign="start center">
+                                <mat-icon [ngStyle]="{ color: !n.toRead? '#0065cb' : '#000000de' }">newspaper</mat-icon>
+                            </div>
+                            <div class="testo-notifica-container" fxFlex="90">
+                                <strong>{{ n.namingOwner }}</strong><span class="testo-notifica"> ha publicato una news.</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="notifica-ricevuta" *ngIf="n.toRead === false" fxFlex="20" fxFlexAlign="center end">
+                        <mat-icon [ngStyle]="{ color: !n.toRead? '#0065cb' : '#000000de' }">notifications_active</mat-icon>
+                    </div>
+                </div>
+                <div> {{ n.dataNotification | date:'dd-MM-yyyy HH:mm' }} </div>
+            </button>
+        </ng-container>
+        <ng-template #nessunaNotificaTrovata>
+            <div mat-menu-item>
+                <strong>Nessuna notifica trovata.</strong>
+            </div>
+        </ng-template>
+    </mat-menu>
+</div>

@@ -1,0 +1,126 @@
+<mat-card class="workspace-card mat-elevation-z8">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>apps</mat-icon>
+    <mat-card-title>Documenti</mat-card-title>
+    <span id="cartella-scelta">{{category.name}}</span>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="workspace-table-container">
+      <div class="wrapper-table">
+        <div class="table-action-container" fxLayout.xs="column" fxLayout.gt-xs="row">
+          <div *ngIf="canUpload" class="button-upload" fxFlex fxFlexAlign.gt-sm="start center" fxFlex fxFlexAlign.lt-sm="center center">
+            <button mat-raised-button
+                    routerLink="new-documento"
+                    class="button-primary">
+              Carica Documento
+              <mat-icon>upload</mat-icon>
+            </button>
+          </div>
+          <div class="filter-table-container" fxFlex fxFlexAlign.gt-sm="end center" fxFlex fxFlexAlign.lt-sm="center center">
+            <div class="filter-table">
+              <mat-form-field appearance="standard" class="form-field-filter">
+                <mat-label>Filtra</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Inserisci testo" #input>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="table">
+          <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- TITOLO Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Titolo</th>
+              <td mat-cell *matCellDef="let row"> {{row?.title}} </td>
+            </ng-container>
+
+            <!-- DATA CARICAMENTO Column -->
+            <ng-container matColumnDef="creationDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Caricamento</th>
+              <td mat-cell *matCellDef="let row"> {{row?.creationDate | date: 'dd-MM-yyyy HH:mm'}}
+              </td>
+            </ng-container>
+
+            <!-- ORGANIZZAZIONE Column -->
+            <ng-container matColumnDef="organizatioName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Organizzazione</th>
+              <td mat-cell *matCellDef="let row"> {{row?.organizatioName}} </td>
+            </ng-container>
+
+            <!-- AUTORE  Column -->
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Autore</th>
+              <td mat-cell *matCellDef="let row"> {{row?.author}} </td>
+            </ng-container>
+
+            <!-- STATO Column -->
+            <ng-container matColumnDef="stato">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stato</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-icon [matTooltip]="row?.stato">
+                  {{
+                  (row?.stato === 'BOZZA' ? 'edit' :
+                      (row?.stato === 'DA APPROVARE' ? 'change_circle' :
+                          (row?.stato === 'UFFICIALE' ? 'check_circle' : 'edit')
+                      )
+                  )
+                  }}
+                </mat-icon>
+              </td>
+            </ng-container>
+
+            <!-- VISIBILITA Column -->
+            <ng-container matColumnDef="reserved">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Visibilità</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-icon
+                  [matTooltip]=
+                    "(row.reserved === 0? 'Tutti gli utenti':
+                        (row.reserved === 1? 'La mia organizzazione' :
+                                                        (row.reserved === 2? 'Gruppi' : 'Gruppi')
+                                                    )
+                                                )">
+                  {{
+                  (row?.reserved === 0 ? 'public' :
+                      (row?.reserved === 1 ? 'business' :
+                          (row?.reserved === 2 ? 'group' : 'public')
+                      )
+                  )
+                  }}
+                </mat-icon>
+              </td>
+            </ng-container>
+
+            <!-- AZIONI Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Azioni</th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-raised-button class="button-primary" [matMenuTriggerFor]="menu"> Azioni
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="goToDetail(row.token)"> Dettaglio</button>
+                  <button mat-menu-item (click)="downloadDocumento(row.token)"> Download</button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="7">Nessun elemento trovato</td>
+            </tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[10, 25, 100]"
+                         aria-label="Selezione la pagina degli elementi"></mat-paginator>
+        </div>
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+

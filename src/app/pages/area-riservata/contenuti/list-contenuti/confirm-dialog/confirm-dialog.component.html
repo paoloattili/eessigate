@@ -1,0 +1,56 @@
+<div class="dialog-container" [ngClass]="{'backdrop-progress-bar' : spinnerService.isProgressBarActive()}">
+    <h2 class="header-dialog">{{ tipoConfirm }} contenuto</h2>
+    <mat-divider></mat-divider>
+    <form id="aggiornaStatoForm" [formGroup]="aggiornaStatoForm"
+        (ngSubmit)="onSubmit(data.tipo, data.stato, data.token)">
+        <mat-dialog-content>
+            <div class="question-container" fxLayout="column">
+                <strong>{{ question }}</strong>
+            </div>
+            <div class="note-container" fxLayout="column" *ngIf="!data.isElimina">
+                <mat-form-field appearance="outline">
+                    <mat-label>Inserire motivazione</mat-label>
+                    <textarea formControlName="note" matInput></textarea>
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                        *ngIf="aggiornaStatoForm.get(['note'])!.invalid && (aggiornaStatoForm.get(['note'])!.dirty || aggiornaStatoForm.get(['note'])!.touched)">
+                        <mat-error *ngIf="aggiornaStatoForm.get(['note'])!.errors.pattern">
+                            Questo campo contiene caratteri non ammessi.
+                        </mat-error>
+                    </ng-container>
+                </mat-form-field>
+            </div>
+        </mat-dialog-content>
+        <mat-progress-bar mode="indeterminate" *ngIf="spinnerService.isProgressBarActive()"></mat-progress-bar>
+        <mat-divider></mat-divider>
+        <mat-dialog-actions align="end">
+            <button mat-raised-button *ngIf="data.tipo === 2 && data.stato === 'DA_PUBBLICARE'" class="btn-success"
+                form="aggiornaStatoForm" [disabled]="aggiornaStatoForm.invalid">
+                <mat-icon>check_circle</mat-icon>
+                Publica
+            </button>
+            <button mat-raised-button *ngIf="data.tipo === 2 && data.stato === 'PUBBLICATO'" class="btn-success"
+                form="aggiornaStatoForm" [disabled]="aggiornaStatoForm.invalid">
+                <mat-icon>unpublished</mat-icon>
+                Depubblica
+            </button>
+            <button mat-raised-button *ngIf="data.tipo === 1" class="btn-success" form="aggiornaStatoForm"
+                [disabled]="aggiornaStatoForm.invalid">
+                <mat-icon>change_circle</mat-icon>
+                Approva
+            </button>
+            <button mat-raised-button *ngIf="data.tipo === 2 || data.tipo === 1 || data.tipo === 3" class="btn-error"
+                form="aggiornaStatoForm" [disabled]="aggiornaStatoForm.invalid">
+                <mat-icon>not_interested</mat-icon>
+                Rigetta
+            </button>
+            <button mat-raised-button *ngIf="data.isElimina" class="btn-error" form="aggiornaStatoForm"
+                [disabled]="aggiornaStatoForm.invalid">
+                <mat-icon>delete</mat-icon>
+                Elimina
+            </button>
+            <button #bottoneChiusura mat-raised-button mat-dialog-close>Chiudi</button>
+        </mat-dialog-actions>
+    </form>
+</div>

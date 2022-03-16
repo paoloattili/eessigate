@@ -1,0 +1,420 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="main-container" fxLayout="row" fxLayoutAlign="center center" fxLayout.gt-lg="row" fxLayout.lt-lg="column"
+     fxLayoutGap="1rem"
+     fxLayoutGap.lt-lg="1rem">
+
+  <mat-stepper #matStepper [linear]="true" fxFlex="70" orientation="horizontal" labelPosition="end">
+
+    <!-- STEP 1 - SCELTA TICKET -->
+    <mat-step>
+      <ng-template matStepLabel>Scegli il tipo di ticket</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+
+
+        <div class="page-container" fxLayout="column" fxLayoutAlign="space-around center" fxLayout.lt-md="column"
+             fxLayoutGap="10px">
+
+          <div class="top-container">
+
+            <mat-form-field>
+              <mat-placeholder>Cerca un settore</mat-placeholder>
+              <input
+                matInput
+                (focus)="searchInput.setValue('*');"
+                [formControl]="searchInput"
+                [matAutocomplete]="auto"
+              >
+              <button mat-button matSuffix aria-label="search" disabled>
+                <mat-icon>search</mat-icon>
+              </button>
+
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                (optionSelected)="selectOptionSezione($event.option.value)">
+                <mat-option *ngFor="let option of filteredSettori | async" [value]="option">
+                  {{option.descrizione}}
+                  <small style="text-transform: lowercase" *ngIf="option?.descrzioneArgomento">
+                    - {{ option.descrzioneArgomento }}</small>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+          </div>
+
+          <div class="title-container">
+            <h2>SELEZIONARE IL TIPO DI TICKET</h2>
+          </div>
+
+          <div class="bottom-container"
+               fxLayout="row"
+               fxLayoutAlign="space-evenly center"
+               fxLayoutGap="10px"
+               fxFlex="100" fxFlex.lt-md="100"
+          >
+
+            <button mat-raised-button (click)="$event.stopPropagation();selectTipoTicket('tecnico')">
+              <mat-icon>build</mat-icon>
+              <span>Tecnico</span>
+            </button>
+
+            <button mat-raised-button (click)="$event.stopPropagation();selectTipoTicket('business')">
+              <mat-icon>business_center</mat-icon>
+              <span>Business</span>
+            </button>
+          </div>
+
+
+        </div>
+      </div>
+
+    </mat-step>
+
+    <!-- STEP 2 - FORM -->
+    <mat-step>
+      <ng-template matStepLabel>Compila la richiesta</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container-step2" fxLayout="row" fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutGap="1rem"
+             fxLayoutGap.lt-lg="1rem">
+
+          <mat-card class="generic-card mat-elevation-z0">
+
+            <div class="container-content">
+              <mat-card-content class="genic-card-content">
+
+                <!--DOCUMENTO FORM -->
+
+                <form id="richiesta-form" [formGroup]="richiestaForm" fxLayout="column">
+
+                  <!-- SETTORE SELECTOR -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Settore/Sector*</mat-label>
+                    <mat-select formControlName="settore">
+                      <mat-option *ngFor="let option of listaSettore" [value]="option.token">
+                        {{option.descrizione}}
+                      </mat-option>
+                    </mat-select>
+
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                      *ngIf="richiestaForm.get(['settore'])!.invalid && (richiestaForm.get(['settore'])!.dirty || richiestaForm.get(['settore'])!.touched)">
+                      <mat-error *ngIf="richiestaForm.get(['settore'])!.errors.required">
+                        Questo campo è obbligatorio!
+                      </mat-error>
+                    </ng-container>
+                  </mat-form-field>
+
+                  <ng-container *ngIf="tipoTicket?.descrizione.toLowerCase() == 'business'" [formGroup]="selectForm">
+                    <!-- BUC SELECTOR -->
+                    <mat-form-field appearance="outline" disabled="true">
+                      <mat-label>Buc*</mat-label>
+                      <mat-select formControlName="buc">
+                        <mat-option *ngFor="let option of listaBuc" [value]="option.token">
+                          {{option.descrizione}}
+                        </mat-option>
+                      </mat-select>
+
+
+                      <!-- ERROR MSG -->
+                      <ng-container
+                        *ngIf="selectForm.get(['buc'])!.invalid && (selectForm.get(['buc'])!.dirty || selectForm.get(['buc'])!.touched)">
+                        <mat-error *ngIf="selectForm.get(['buc'])!.errors.required">
+                          Questo campo è obbligatorio!
+                        </mat-error>
+                      </ng-container>
+                    </mat-form-field>
+
+                    <!-- Ente/Organization SELECTOR -->
+                    <mat-form-field appearance="outline" disabled="true">
+                      <mat-label>Ente/Organization*</mat-label>
+                      <mat-select formControlName="organizzazione">
+                        <mat-option *ngFor="let option of listaOrganizzazione" [value]="option.token">
+                          {{option.name}}
+                        </mat-option>
+                      </mat-select>
+
+
+                      <!-- ERROR MSG -->
+                      <ng-container
+                        *ngIf="selectForm.get(['organizzazione'])!.invalid && (selectForm.get(['organizzazione'])!.dirty || selectForm.get(['organizzazione'])!.touched)">
+                        <mat-error *ngIf="selectForm.get(['organizzazione'])!.errors.required">
+                          Questo campo è obbligatorio!
+                        </mat-error>
+                      </ng-container>
+                    </mat-form-field>
+                  </ng-container>
+
+
+                  <!-- TITOLO -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Titolo/Title*</mat-label>
+                    <input formControlName="titolo" matInput>
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                      *ngIf="richiestaForm.get(['titolo'])!.invalid && (richiestaForm.get(['titolo'])!.dirty || richiestaForm.get(['titolo'])!.touched)">
+
+                      <mat-error *ngIf="richiestaForm.get(['titolo'])!.errors.required">
+                        Questo campo è obbligatorio!
+                      </mat-error>
+
+                      <mat-error *ngIf="richiestaForm.get(['titolo'])!.errors.pattern">
+                        Questo campo contiene caratteri non ammessi.
+                      </mat-error>
+
+                    </ng-container>
+                  </mat-form-field>
+
+
+                  <!-- URGENZA SELECTOR -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Urgenza/Severity*</mat-label>
+                    <mat-select formControlName="urgenza">
+                      <mat-option *ngFor="let option of listaUrgenza" [value]="option.idUrgenza">
+                        {{option.descrizioneUrgenza}}
+                      </mat-option>
+                    </mat-select>
+
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                      *ngIf="richiestaForm.get(['urgenza'])!.invalid && (richiestaForm.get(['urgenza'])!.dirty || richiestaForm.get(['urgenza'])!.touched)">
+                      <mat-error *ngIf="richiestaForm.get(['urgenza'])!.errors.required">
+                        Questo campo è obbligatorio!
+                      </mat-error>
+                    </ng-container>
+                  </mat-form-field>
+
+
+                  <!-- IMPATTO SELECTOR -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Impatto/Impact*</mat-label>
+                    <mat-select formControlName="impatto">
+                      <mat-option *ngFor="let option of listaImpatto" [value]="option.idImpatto">
+                        {{option.descrizioneImpatto}}
+                      </mat-option>
+                    </mat-select>
+
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                      *ngIf="richiestaForm.get(['impatto'])!.invalid && (richiestaForm.get(['impatto'])!.dirty || richiestaForm.get(['impatto'])!.touched)">
+                      <mat-error *ngIf="richiestaForm.get(['impatto'])!.errors.required">
+                        Questo campo è obbligatorio!
+                      </mat-error>
+                    </ng-container>
+                  </mat-form-field>
+
+                  <!-- DESCRIZIONE -->
+                  <mat-form-field appearance="outline">
+                    <mat-label>Descrizione/Description*</mat-label>
+                    <textarea formControlName="descrizione" matInput rows="5"></textarea>
+
+                    <!-- ERROR MSG -->
+                    <ng-container
+                      *ngIf="richiestaForm.get(['descrizione'])!.invalid && (richiestaForm.get(['descrizione'])!.dirty || richiestaForm.get(['descrizione'])!.touched)">
+                      <mat-error *ngIf="richiestaForm.get(['descrizione'])!.errors.pattern">
+                        Questo campo contiene caratteri non ammessi.
+                      </mat-error>
+                    </ng-container>
+                  </mat-form-field>
+
+                  <mat-divider style="margin-bottom: 15px;"></mat-divider>
+
+                  <!-- ALLEGATI -->
+                  <div class="container-img" fxLayout="column" formArrayName="attachments"
+                       dndFile (fileDropped)="selectedFile($event)" >
+                    <div class="label"
+                         fxLayout="row"
+                         fxLayoutAlign="space-between center"
+                         style="margin-bottom: 15px;"
+                    >
+                      <div matTooltip="E' possibile trascinare un file su questo campo!" >
+                        <mat-icon class="icon allegati">attach_file</mat-icon>
+                        <mat-label>Allegati</mat-label>
+                      </div>
+
+                      <!-- button -->
+                      <button
+                        mat-flat-button class="btn-basic">
+                        <mat-icon>add</mat-icon>
+                        <span fxHide.lt-md>Aggiungi Allegati</span>
+                        <input id="uploadAttachment" #fileInput type="file"
+                             (change)="$event.stopPropagation();logEvento($event);selectedFile($event.target.files);"
+                               name="uploadAttachment"/>
+                      </button>
+
+                    </div>
+
+                    <div class="container-file-input"
+                         *ngFor="let item of attachments.controls; let i=index;"
+                    >
+                      <div class="fileForm"
+                           [formGroupName]="i"
+                           fxLayout="row"
+                           fxLayoutAlign="center center"
+                           style="margin-bottom: 15px;"
+                      >
+
+                        <!-- input display name -->
+                        <mat-form-field
+                          fxFlex
+                          class="form-field-file"
+                          appearance="outline"
+                        >
+                          <mat-label>File</mat-label>
+                          <input formControlName="name" matInput readonly name="name">
+
+                          <button mat-icon-button matSuffix (click)="$event.stopPropagation();rimuoviFile(i)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+
+                          <ng-template #deleteFile>
+                            <button mat-icon-button matSuffix *ngIf="i > 0"
+                                    (click)="$event.stopPropagation();rimuoviFile(i)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </ng-template>
+
+                          <!-- filename errors -->
+                          <ng-container
+                            *ngIf="item.get(['name'])!.dirty || item.get(['name'])!.touched">
+                            <mat-error *ngIf="item.get(['fileSource'])!.errors?.required">
+                              Si deve scegliere un file!
+                            </mat-error>
+                          </ng-container>
+
+                          <!-- FILE - ERRORS -->
+                          <ng-container *ngIf="item.get(['fileSource'])?.errors">
+                            <ng-container
+                              *ngIf="item.get(['fileSource']).errors['invalidSize'] !== null">
+                              <mat-error *ngIf="item.get(['fileSource']).errors['invalidSize']">
+                                Il file {{item.get(['name']).value}} supera i 20Mbyte. Devi
+                                scegliere un
+                                altro
+                                file.
+                              </mat-error>
+                            </ng-container>
+
+                            <ng-container
+                              *ngIf="item.get(['fileSource']).errors['invalidType'] !== null">
+                              <mat-error *ngIf="item.get(['fileSource']).errors['invalidType']">
+                                Questo tipo di file {{item.get(['name']).value}} non può
+                                essere
+                                caricato.
+                              </mat-error>
+                            </ng-container>
+
+                            <ng-container
+                              *ngIf="item.get(['fileSource']).errors['invalidName'] !== null">
+                              <mat-error *ngIf="item.get(['fileSource']).errors['invalidName']">
+                                Il file {{item.get(['name']).value}} deve essere rinominato.
+                              </mat-error>
+                            </ng-container>
+
+                          </ng-container>
+
+                        </mat-form-field>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </form>
+
+              </mat-card-content>
+
+              <mat-divider style="margin-bottom: 20px;"></mat-divider>
+
+              <ng-container *ngIf="richiestaForm.invalid && richiestaForm.touched">
+                <mat-error>
+                  I campi con (*) sono obbligatori.
+                </mat-error>
+              </ng-container>
+
+              <mat-card-actions class="genic-card-content"
+                                fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px"
+              >
+
+                <!-- btn torna indietro -->
+                <button class="btn-back" mat-flat-button color="primary" (click)="$event.stopPropagation();tornaIndietro()"
+                        matTooltip="I dati inseriti fino ad ora verrano cancellati.">
+                  <mat-icon>arrow_back_ios_new</mat-icon>
+                  <span>Torna indietro</span>
+                </button>
+
+                <!-- btn invia richiesta -->
+                <ng-container *ngIf="tipoTicket?.descrizione.toLowerCase() == 'organizzazione';else btnTecnico">
+                  <button (click)="$event.stopPropagation();creaTicket()" form="richiesta-form" mat-flat-button class="btn-basic"
+                          [disabled]="richiestaForm.invalid && selectForm.invalid">
+                    <mat-icon>send</mat-icon>
+                    <span>Invia richiesta</span>
+                  </button>
+                </ng-container>
+
+                <ng-template #btnTecnico>
+                  <button (click)="$event.stopPropagation();creaTicket()" form="richiesta-form" mat-flat-button class="btn-basic"
+                          [disabled]="richiestaForm.invalid">
+                    <mat-icon>send</mat-icon>
+                    <span>Invia richiesta</span>
+                  </button>
+                </ng-template>
+
+
+              </mat-card-actions>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>
+
+    </mat-step>
+
+    <!-- STEP 3 - MESSAGGIO -->
+    <mat-step>
+      <ng-template matStepLabel>Richiesta inoltrata!</ng-template>
+
+      <div class="container-steps mat-elevation-z8">
+        <div class="page-container"
+             fxLayout="row" fxLayout.gt-lg="row" fxLayout.lt-lg="column"
+             fxLayoutGap="1rem" fxLayoutGap.lt-lg="1rem"
+             fxLayoutAlign="center center" fxLayoutAlign.gt-lg="center center" fxLayoutAlign.lt-lg="center center">
+
+          <mat-card class="generic-card mat-elevation-z0">
+
+            <div class="container-content">
+
+              <div class="container-complete" fxLayout="column" fxLayoutAlign="center center">
+                <div class="container-icon">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+
+                <ng-container *ngIf="tipoTicket?.descrizione.toLowerCase() === 'business';else richiestaTecnico">
+                  <div class="testo-complete">Hai salvato la richiesta.<br> Puoi entrare al dettaglio della richiesta
+                    <a [routerLink]="['../mie-richieste/dettaglio-richiesta']" [queryParams]="{t: tokenNuovaRichiestaSalvata, argomentoHelpDesk:'business', stato: '1'}">qui</a>.
+                  </div>
+                </ng-container>
+
+                <ng-template #richiestaTecnico>
+                  <div class="testo-complete">Hai salvato la richiesta.<br> Puoi entrare al dettaglio della richiesta
+                    <a [routerLink]="['../mie-richieste']" [queryParams]="{tipo:'tecnico', stato: 'APERTO'}">qui</a>.
+                  </div>
+                </ng-template>
+
+
+              </div>
+            </div>
+
+          </mat-card>
+        </div>
+
+      </div>
+    </mat-step>
+
+
+  </mat-stepper>
+
+</div>

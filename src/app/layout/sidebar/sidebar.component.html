@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+    <strong>Menù</strong>
+</mat-toolbar>
+
+<div class="nav-italian-flag">
+    <div class="flag-color green"></div>
+    <div class="flag-color white"></div>
+    <div class="flag-color red"></div>
+</div>
+
+<mat-list role="list">
+    <mat-list-item role="listitem" *ngIf="user !== null">
+        <button *ngIf="user" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="user-icon"> account_circle </mat-icon> 
+            <span> {{user?.denominazione}}  </span>
+            <mat-icon> arrow_drop_down </mat-icon>
+        </button>
+        <mat-menu *ngIf="user" #menu="matMenu">
+            <div class="ruoli-container" *ngIf="user?.ruoli; else divRuolo">
+                <div *ngFor="let ruolo of user?.ruoli">
+                    <div class="ellipsis"> 
+                        <strong [matTooltip]="ruolo.nome">{{ruolo.nome}}</strong>
+                    </div>
+                    <div class="ellipsis">
+                        <small [matTooltip]="ruolo.descrizione"> {{ruolo.descrizione}} </small>
+                    </div>                  
+                </div>
+            </div>     
+            <ng-template>
+                <span #divRuolo> - </span>
+            </ng-template>
+            <mat-divider></mat-divider> 
+            <div class="last-login-date">
+                <span>Data ultimo login: {{ user?.lastLoginDate | date: 'dd-MM-yyyy HH:mm' }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="container-logout">
+                <button mat-raised-button class="button-primary" (click)="logout()"> 
+                    <mat-icon>logout</mat-icon>
+                    <span> Logout </span>
+                </button>
+            </div>
+        </mat-menu>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item role="listitem" *ngFor="let item of items">
+        <button mat-button *ngIf="!item.haveSubItems()" (click)="onClickNavbarItem(item)">
+            <span> {{ item.title }} </span>
+        </button>
+        <div *ngIf="item.haveSubItems()">
+            <button mat-button [matMenuTriggerFor]="subItemsMN">
+                <span> {{ item.title }} </span>
+                <mat-icon class="side-caret"> arrow_drop_down </mat-icon>
+            </button>
+            <mat-menu #subItemsMN="matMenu">
+                <button mat-menu-item *ngFor="let subItem of item.subItems" (click)="onClickNavbarItem(subItem)">
+                    <span> {{ subItem.title }} </span>
+                </button>
+            </mat-menu>
+        </div>
+    </mat-list-item>
+</mat-list>

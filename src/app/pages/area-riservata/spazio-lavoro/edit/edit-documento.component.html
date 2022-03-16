@@ -1,0 +1,529 @@
+<h1> {{title}} </h1>
+<mat-divider></mat-divider>
+<div class="main-container" fxLayout="row" fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutGap="1rem"
+     fxLayoutGap.lt-lg="1rem">
+
+  <!-- CONTAINER SX -->
+  <div class="left-container" fxFlex="30%" fxFlex.gt-lg="30%" fxFlex.lt-lg="100%">
+
+
+    <mat-card class="mat-elevation-z8">
+
+      <mat-card-header>
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Scheda</mat-card-title>
+      </mat-card-header>
+
+      <div class="container-content">
+        <mat-card-content>
+
+          <div class="container-info-items">
+
+            <!-- organizzazione -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>account_balance</mat-icon>
+                <span class="item-name">Organizzazione</span>
+              </div>
+              <div class="item-right">{{ documento?.organizzazione ? documento.organizzazione : '-' }}</div>
+            </div>
+
+            <!-- categoria/ cartella -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>folder</mat-icon>
+                <span class="item-name">Cartella</span>
+              </div>
+              <div class="item-right">{{ documento?.categoryName ? documento.categoryName : '-' }}</div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- autore -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>person</mat-icon>
+                <span class="item-name">Autore</span>
+              </div>
+              <div class="item-right">{{ documento?.author ? documento.author : '-' }}</div>
+            </div>
+
+            <!-- nome documento -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>book</mat-icon>
+                <span class="item-name">Nome documento</span>
+              </div>
+              <div class="item-right">{{ documento?.fileName ? documento.fileName : '-' }}</div>
+            </div>
+
+            <!-- visibilita -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>remove_red_eye</mat-icon>
+                <span class="item-name">Visibilità</span>
+              </div>
+              <div class="item-right">{{ documento?.visibilita ? documento.visibilita : '-' }}</div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>person</mat-icon>
+                <span class="item-name">Uploader</span>
+              </div>
+              <div class="item-right">{{ documento?.uploader ? documento.uploader : '-' }}</div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- data di creazione -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="item-name">Data creazione</span>
+              </div>
+              <div class="item-right"
+                   *ngIf="documento?.creationDate;else noItemRight">{{ documento.creationDate | date: 'dd-MM-yyyy' }}</div>
+            </div>
+
+            <!-- data ultima modifica -->
+            <div class="item">
+              <div class="item-left">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="item-name">Utlima modifica</span>
+              </div>
+              <div class="item-right"
+                   *ngIf="documento?.lastModified;else noItemRight">{{ documento.lastModified | date: 'dd-MM-yyyy' }}</div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- tags -->
+            <div class="item" [ngClass]="{'column': tagsDocumento.length > 0 }">
+              <div class="item-left">
+                <mat-icon>label</mat-icon>
+                <span class="item-name">Tags</span>
+              </div>
+              <div *ngIf="tagsDocumento.length > 0; else noTags" class="item-row">
+                <mat-chip-list>
+                  <mat-chip *ngFor="let tag of tagsDocumento">{{ tag.tag  }}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <ng-template #noTags>
+                <div class="item-right">Nessun tag da mostrare</div>
+              </ng-template>
+            </div>
+
+          </div>
+
+
+        </mat-card-content>
+
+
+        <mat-divider></mat-divider>
+        <mat-card-actions class="container-actions">
+
+          <!-- download button -->
+          <button mat-raised-button color="primary" class="action-item download" (click)="downloadDocumento()">
+            <mat-icon>download</mat-icon>
+            <span class="action-name">Download</span>
+          </button>
+
+        </mat-card-actions>
+
+      </div>
+
+    </mat-card>
+
+
+  </div>
+
+  <!-- CONTAINER DX -->
+  <div class="right-container" fxFlex="70%" fxFlex.gt-lg="70%" fxFlex.lt-lg="100%">
+
+
+    <mat-card class="generic-card mat-elevation-z8">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>apps</mat-icon>
+        <mat-card-title>Informazioni</mat-card-title>
+      </mat-card-header>
+
+      <div class="container-content">
+        <mat-card-content>
+
+
+          <!--DOCUMENTO FORM -->
+
+          <form id="documentForm" [formGroup]="documentoForm">
+
+
+
+              <!-- Categoria -->
+              <mat-form-field appearance="outline">
+                <mat-label>Categoria*</mat-label>
+                <input formControlName="categoria" readonly matInput>
+
+                <!-- ERROR MSG -->
+                <!-- <ng-container
+                  *ngIf="documentoForm.get(['categoria'])!.invalid && (documentoForm.get(['categoria'])!.dirty || documentoForm.get(['categoria'])!.touched)">
+                  <mat-error *ngIf="documentoForm.get(['categoria'])!.errors.required">
+                    Questo campo è obbligatorio!
+                    Selezionare una cartella nell'albero.
+                  </mat-error>
+                </ng-container> -->
+              </mat-form-field>
+
+
+            <mat-accordion id="accordion-categoria">
+                <mat-expansion-panel  hideToggle>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Scegli la categoria
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-panel-description>
+                    <app-tree [categories]="categories" (clickNode)="clickNode($event)"></app-tree>
+                  </mat-panel-description>
+                </mat-expansion-panel>
+              </mat-accordion>
+
+
+
+            <!-- AUTORE -->
+            <mat-form-field appearance="outline">
+              <mat-label>Autore*</mat-label>
+              <input formControlName="autore" matInput>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['autore'])!.invalid && (documentoForm.get(['autore'])!.dirty || documentoForm.get(['autore'])!.touched)">
+
+                <mat-error *ngIf="documentoForm.get(['autore'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+
+                <mat-error *ngIf="documentoForm.get(['autore'])!.errors.pattern">
+                  Questo campo contiene caratteri non ammessi.
+                </mat-error>
+
+              </ng-container>
+            </mat-form-field>
+
+
+            <!-- TIPO DOCUMENTO -->
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo documento*</mat-label>
+              <mat-select formControlName="tipoDocumento">
+                <mat-option *ngFor="let option of tipiDocumentoTipologiche" [value]="option.token">
+                  {{option.name}}
+                </mat-option>
+              </mat-select>
+
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['tipoDocumento'])!.invalid && (documentoForm.get(['tipoDocumento'])!.dirty || documentoForm.get(['tipoDocumento'])!.touched)">
+                <mat-error *ngIf="documentoForm.get(['tipoDocumento'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+              </ng-container>
+            </mat-form-field>
+
+
+            <!-- TITOLO -->
+            <mat-form-field appearance="outline">
+              <mat-label>Titolo*</mat-label>
+              <input formControlName="titolo" matInput>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['titolo'])!.invalid && (documentoForm.get(['titolo'])!.dirty || documentoForm.get(['titolo'])!.touched)">
+
+                <mat-error *ngIf="documentoForm.get(['titolo'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+
+                <mat-error *ngIf="documentoForm.get(['titolo'])!.errors.pattern">
+                  Questo campo contiene caratteri non ammessi.
+                </mat-error>
+
+              </ng-container>
+            </mat-form-field>
+
+
+            <!-- DESCRIZIONE -->
+            <mat-form-field appearance="outline">
+              <mat-label>Descrizione</mat-label>
+              <textarea formControlName="descrizione" matInput></textarea>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['descrizione'])!.invalid && (documentoForm.get(['descrizione'])!.dirty || documentoForm.get(['descrizione'])!.touched)">
+
+                <mat-error *ngIf="documentoForm.get(['descrizione'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+
+                <mat-error *ngIf="documentoForm.get(['descrizione'])!.errors.pattern">
+                  Questo campo contiene caratteri non ammessi.
+                </mat-error>
+
+              </ng-container>
+            </mat-form-field>
+
+
+            <!-- NOME DEL DOCUMENTO -->
+            <!--            <mat-form-field id="nomeDocumento" appearance="outline">-->
+            <!--              <mat-label>Nome documento*</mat-label>-->
+            <!--              <input formControlName="nomeDocumento" matInput>-->
+
+            <!--              &lt;!&ndash; ERROR MSG &ndash;&gt;-->
+            <!--              <ng-container-->
+            <!--                *ngIf="documentoForm.get(['nomeDocumento'])!.invalid && (documentoForm.get(['nomeDocumento'])!.dirty || documentoForm.get(['nomeDocumento'])!.touched)">-->
+            <!--                <mat-error *ngIf="documentoForm.get(['nomeDocumento'])!.errors.required">-->
+            <!--                  Questo campo è obbligatorio!-->
+            <!--                </mat-error>-->
+            <!--              </ng-container>-->
+
+            <!--              &lt;!&ndash; NAMING CONVENTION&ndash;&gt;-->
+            <!--              <small>Naming convention: </small>-->
+            <!--            </mat-form-field>-->
+
+
+            <!-- FILE -->
+            <div id="fileForm" fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="space-between none"
+                 fxLayoutGap="10px">
+              <button fxFlex="20" mat-flat-button color="primary">
+                Scegli un file
+                <input
+                  id="uploadFile"
+                  #fileInput
+                  type="file"
+                  (change)="selectedFile($event.target.files)"
+                  name="uploadFile"
+                />
+              </button>
+
+              <!-- input display name -->
+              <mat-form-field class="form-field-file" fxFlex formGroupName="file" appearance="outline"
+                              matTooltip="E' possibile trascinare un file su questo campo!"
+                              dndFile (fileDropped)="selectedFile($event)" >
+
+                <mat-label>File*</mat-label>
+                <input formControlName="name" matInput readonly name="name" matTooltip="Devi sceglire un file.">
+
+                <!-- filename errors -->
+                <!-- <ng-container
+                  *ngIf="file.get(['name'])!.dirty || file.get(['name'])!.touched">
+                  <mat-error *ngIf="file.get(['fileSource'])!.errors?.required">
+                    Si deve scegliere un file!
+                  </mat-error>
+                </ng-container> -->
+
+
+                <!-- FILE - ERRORS -->
+                <ng-container *ngIf="file.get(['fileSource'])?.errors">
+                  <ng-container *ngIf="file.get(['fileSource']).errors['invalidSize'] !== null">
+                    <mat-error *ngIf="file.get(['fileSource']).errors['invalidSize']">
+                      Il file {{file.get(['name']).value}} supera i 20Mbyte. Devi scegliere un altro file.
+                    </mat-error>
+                  </ng-container>
+
+                  <ng-container *ngIf="file.get(['fileSource']).errors['invalidType'] !== null">
+                    <mat-error *ngIf="file.get(['fileSource']).errors['invalidType']">
+                      Questo tipo di file {{file.get(['name']).value}} non può essere caricato.
+                    </mat-error>
+                  </ng-container>
+
+                  <ng-container *ngIf="file.get(['fileSource']).errors['invalidName'] !== null">
+                    <mat-error *ngIf="file.get(['fileSource']).errors['invalidName']">
+                      Il file {{file.get(['name']).value}} deve essere rinominato.
+                    </mat-error>
+                  </ng-container>
+
+                </ng-container>
+
+              </mat-form-field>
+            </div>
+
+
+            <!-- STATO -->
+            <div class="radio-group">
+              <label id="stato-label">Stato*: </label>
+              <mat-radio-group aria-labelledby="stato-label" formControlName="stato" aria-label="Stato">
+                <mat-radio-button value="1">Bozza</mat-radio-button>
+                <mat-radio-button value="2">Ufficiale</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+
+            <!-- VISIBILITA' FORMGROUP-->
+            <ng-container formGroupName="visibilita">
+              <div class="radio-group">
+                <label id="visibilita-label">Visibilità*: </label>
+                <!-- VALUE -->
+                <mat-radio-group aria-labelledby="visibilita-label" formControlName="value" aria-label="Visibilità">
+                  <mat-radio-button value="0">Tutti gli utenti</mat-radio-button>
+                  <mat-radio-button value="1">Solo la mia organizzazione</mat-radio-button>
+                  <mat-radio-button value="2">Solo i seguenti gruppi</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </ng-container>
+
+
+            <!-- GRUPPI ATTVATO SU VISIBILITA' -->
+            <ng-container *ngIf="visibilita.get(['value'])?.value == '2'">
+              <mat-form-field appearance="outline">
+                <mat-label>Gruppi*</mat-label>
+                <mat-chip-list #gruppoList aria-label="Gruppi*">
+                  <mat-chip
+                    *ngFor="let gruppo of gruppi"
+                    (removed)="removeGruppo(gruppo)">
+                    {{gruppo.name}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip>
+                  <input
+                    #gruppoInput
+                    [formControl]="gruppiInputControl"
+                    [matAutocomplete]="autoGruppi"
+                    [matChipInputFor]="gruppoList"
+                  >
+                </mat-chip-list>
+                <mat-autocomplete #autoGruppi="matAutocomplete" (optionSelected)="selectedGruppo($event)">
+                  <mat-option *ngFor="let gruppo of filteredGruppi | async" [value]="gruppo">
+                    <span>{{gruppo.name}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+
+                <!-- ERROR MSG -->
+                <ng-container
+                  *ngIf="(gruppiInputControl!.dirty || gruppiInputControl!.touched)">
+                  <mat-error *ngIf="this.gruppi.length <= 0">
+                    Questo campo è obbligatorio!
+                  </mat-error>
+                </ng-container>
+
+              </mat-form-field>
+            </ng-container>
+
+
+            <!-- TAGS -->
+            <mat-form-field appearance="outline">
+              <mat-label>Tags</mat-label>
+              <mat-chip-list #tagList aria-label="Tags">
+                <mat-chip
+                  *ngFor="let tag of tags"
+                  (removed)="removeTag(tag)">
+                  {{tag}}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="New tag..."
+                  #tagInput
+                  [formControl]="tagsInputControl"
+                  [matAutocomplete]="autoTag"
+                  [matChipInputFor]="tagList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addTag($event)">
+              </mat-chip-list>
+              <mat-autocomplete #autoTag="matAutocomplete" (optionSelected)="selectedTag($event)">
+                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                  {{tag}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+
+            <!-- NOTE -->
+            <mat-form-field appearance="outline">
+              <mat-label>Note</mat-label>
+              <textarea formControlName="note" matInput></textarea>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['notifica'])!.invalid && (documentoForm.get(['notifica'])!.dirty || documentoForm.get(['notifica'])!.touched)">
+                <mat-error *ngIf="documentoForm.get(['note'])!.errors.pattern">
+                  Questo campo contiene caratteri non ammessi.
+                </mat-error>
+              </ng-container>
+            </mat-form-field>
+
+
+            <!-- NOTIFICA -->
+            <div class="checkbox">
+              <mat-checkbox aria-labelledby="invia-notifica-label" formControlName="notifica">Invia notifica*
+              </mat-checkbox>
+
+              <!-- ERROR MSG -->
+              <ng-container
+                *ngIf="documentoForm.get(['notifica'])!.invalid && (documentoForm.get(['notifica'])!.dirty || documentoForm.get(['notifica'])!.touched)">
+                <mat-error *ngIf="documentoForm.get(['notifica'])!.errors.required">
+                  Questo campo è obbligatorio!
+                </mat-error>
+              </ng-container>
+            </div>
+
+
+          </form>
+
+        </mat-card-content>
+        <mat-divider></mat-divider>
+
+        <mat-card-actions id="actions-edit-documento-form">
+
+          <button id="back-dettaglio" mat-flat-button color="primary" (click)="detailDocumento()">
+            <mat-icon>arrow_back_ios</mat-icon>
+            <span>Dettaglio</span>
+          </button>
+
+          <!-- con gruppi -->
+          <ng-container *ngIf="visibilita.get(['value']).value == 2; else senzaGruppo">
+
+            <button class="saveDocumentForm" form="documentForm" mat-flat-button color="primary"
+                    [disabled]="documentoForm.invalid || this.gruppi.length <= 0" (click)="save()">
+              <mat-icon>save</mat-icon>
+              Salva modifica
+            </button>
+
+            <ng-container
+              *ngIf="documentoForm.invalid && (documentoForm.touched) && documentoForm.invalid || this.gruppi.length <= 0">
+              <mat-error>
+                I campi con (*) sono obbligatori.
+              </mat-error>
+            </ng-container>
+
+          </ng-container>
+
+          <!-- senza gruppi -->
+          <ng-template #senzaGruppo>
+            <button class="saveDocumentForm" form="documentForm" mat-flat-button color="primary"
+                    [disabled]="documentoForm.invalid" (click)="save()">
+              <mat-icon>save</mat-icon>
+              Salva modifica
+            </button>
+
+            <ng-container *ngIf="documentoForm.invalid && (documentoForm.touched) && documentoForm.invalid">
+              <mat-error>
+                I campi con (*) sono obbligatori.
+              </mat-error>
+            </ng-container>
+          </ng-template>
+
+        </mat-card-actions>
+
+      </div>
+
+
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #noItemRight>
+  <div class="item-right">-</div>
+</ng-template>

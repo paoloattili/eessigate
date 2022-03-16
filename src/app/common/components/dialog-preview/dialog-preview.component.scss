@@ -1,0 +1,149 @@
+.sommario {
+    font-weight: bold;
+    font-size: 17px;
+    white-space: normal;
+}
+
+.subtitle-dialog {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+div.container-url mat-form-field {
+    width: 100%;
+}
+
+.content-dialog {
+    padding: 3px 0;
+    max-height: 65vh;
+    overflow-y: scroll;
+}
+
+.attachments-dialog {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.input-url {
+    width: 80%;
+}
+
+.icon-social-label {
+    font-size: 22px;
+}
+
+.icon-attachment-label {
+    font-size: 19px;
+    transform: rotate(45deg);
+}
+
+.icon-gallery-label {
+    font-size: 19px;
+}
+
+.box-attachments-dialog {
+    margin-top: 0.5rem;
+}
+
+.attachment-icon {
+    min-height: 6rem;
+    text-align: center;
+}
+
+.icon-display {
+    transform: scale(3);
+    margin-top: 2rem;
+}
+
+.body-content {
+    white-space: normal;
+}
+
+.box-attachment {
+    min-height: 10rem;
+}
+
+.text-ellipsis {
+    padding: 0.4rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    max-width: 8rem;
+}
+
+.download-attachment {
+    text-align: center;
+}
+
+.gallery-dialog {
+    margin-top: 1rem;
+}
+
+.box-gallery-dialog {
+    margin-top: 0.5rem;
+}
+
+.box-gallery {
+    max-width: 15rem;
+    max-height: 10rem;
+}
+
+.author-name {
+    font-size: 80%;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.author-name::before {
+    font-family: "Material Icons";
+    content: "\e931";
+}
+
+.publication-date-label {
+    font-size: 80%;
+    color: #6c757d;
+}
+
+.container-footer {
+    margin-bottom: 1rem;
+}
+
+.social-icon {
+    margin-top: 1rem;
+    display: flex;
+}
+
+.body-icon {
+    margin-top: 1rem;
+    display: flex;
+}
+
+.allegati-label {
+    display: flex;
+}
+
+.gallery-label {
+    display: flex;
+}
+
+.img-news {
+    max-width: 50px;
+    max-height: 50px;
+    float: left;
+    margin-top: 7px;
+    margin-right: 7px;
+}
+
+// @media (min-width: 960px) {
+//     img:hover {
+//         position: sticky;
+//         top: auto;
+//         left: auto;
+//         transform: scale(2.5) translate(40%, -40%);
+//         transition: transform 1s;
+//         z-index: 9999;
+//         border: 2px solid rgb(143, 143, 143);
+//         background-color: #fff;
+//     }
+// }

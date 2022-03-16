@@ -1,0 +1,47 @@
+<div class="container-discussione">
+
+  <div class="header-discussione" *ngIf="comments">
+    <mat-icon>forum</mat-icon>
+    <span>Commenti ({{ commentsSize }})</span>
+  </div>
+
+  <div class="body-discussione" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+
+    <ng-container *ngIf="comments">
+      <ng-container *ngFor="let comment of comments">
+        <div class="container-message " [ngClass]="utentePrincipale == comment.author ? 'sent': 'received'">
+          <div *ngIf="utentePrincipale == comment.author && menuMessaggioAttivato ">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" >
+              <button mat-menu-item (click)="eliminaCommento(comment.tokenMessageId)" >Elimina commento</button>
+            </mat-menu>
+          </div>
+          <div class="message" [ngClass]="utentePrincipale == comment.author ? 'message-sent': 'message-received'">
+            <div class="message-user">{{ utentePrincipale == comment.author ? '' : comment?.author }}</div>
+            <div class="message-text">{{ comment?.message }}</div>
+            <div class="message-time">{{ comment?.creationDate }}</div>
+          </div>
+
+        </div>
+      </ng-container>
+    </ng-container>
+
+  </div>
+
+  <ng-container *ngIf="disabilitaPulsante">
+    <div class="footer-discussione">
+      <form [formGroup]="commentoForm">
+        <mat-form-field  appearance="outline" class="input-commento">
+          <input formControlName="text" placeholder="Inserisci un commento." matInput (keydown.enter)="invia()">
+        </mat-form-field>
+      </form>
+      <button class="invia-commento" mat-icon-button mat-raised-button color="primary" [disabled]="!commentoForm.get(['text'])?.value" (click)="invia()" >
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+  
+</div>
+

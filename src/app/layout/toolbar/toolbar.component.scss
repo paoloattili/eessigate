@@ -1,0 +1,139 @@
+$iconWidth: 56px;
+
+.side-bar-toggle {
+    display: none;
+
+    padding: 0;
+    margin: 8px;
+    min-width: $iconWidth;
+
+    @media(max-width: 1200px) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    mat-icon {
+        font-size: 30px;
+        height: $iconWidth;
+        width: $iconWidth;
+        line-height: $iconWidth;
+        color: #fff;
+    }
+}
+
+.menu-nav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    @media(max-width: 1200px) {
+        display: none;
+    }
+}
+
+$height_nav_item: 64px;
+
+.menu-nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.menu-nav-item button.btn-item:hover, .menu-nav-user-info button.btn-item:hover {
+    background: #006b99;
+}
+
+.menu-nav-notifications a.a-item mat-icon:hover {
+    color: #cbcbcb;
+}
+
+.menu-nav-item button.btn-item, .menu-nav-user-info button.btn-item {
+    width: 100%;
+    height: 100%;
+    padding: 0.95rem .5rem;
+    background: #0065cb;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+.space {
+    flex: 1 1 auto;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.8em;
+
+    @media(max-width: 1286px) {
+        font-size: 0.7em;
+    }
+}
+
+.menu-nav-notifications {
+    display: flex;
+    align-items: flex-end;
+    width: 5%;
+    margin-top: 0.5rem;
+
+    @media(max-width: 1240px) {
+        padding: 0.8rem;
+    }
+}
+
+.menu-nav-user-info {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.7em;
+
+    @media(max-width: 1200px) {
+        display: none;
+    }
+
+    @media(max-width: 1376px) {
+        .user-info{
+            display: none;
+        }
+    }
+}
+
+.user-info{
+    margin: 0;
+}
+
+.label-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media(max-width: 1240px) {
+        display: none;
+    }
+}
+
+.app-name{
+    font-weight: bold;
+    font-size: 1.3em;
+    margin: 0 2rem 0 2rem;
+
+    @media(max-width: 1200px) {
+        margin: 0 1rem 0 1rem;
+    }
+}
+
+.ruoli-container {
+    text-align: center;
+    padding: 0.3rem;
+}
+
+.last-login-date {
+    padding: 0.3rem;
+}
+
+.container-logout {
+    text-align: center;
+    padding: .5rem;
+}
